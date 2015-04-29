@@ -1,0 +1,13 @@
+{
+    "require": {
+        "slim/slim": "3.0.*@dev",
+        "symfony/security-core": "2.6.*",
+        "j20/php-uuid": "dev-master",
+        "league/plates": "~3.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "Robot": ""
+        }
+    }
+}
