@@ -6,7 +6,6 @@ require __DIR__.'/Robot/helpers.php';
 session_start();
 
 $app = new \Slim\App;
-$auth = new Robot\Auth($app['request'],$app['response']);
 $view = new League\Plates\Engine(__DIR__.'/templates');
 
 /**
@@ -39,8 +38,9 @@ $app->get('/login', function($request,$response) use($view) {
 /**
  * Login processor
  */
-$app->post('/login', function($request,$response) use($auth) {
-    return $auth->authenticate($request->getParam('username'),$request->getParam('password'));
+$app->post('/login', function($request,$response) use($app) {
+    $auth = new Robot\Auth($app['request'],$app['response']);
+    return $auth->authenticate();
 });
 
 $app->run();
