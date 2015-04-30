@@ -5,7 +5,6 @@ devices on a Vera Lite
 
 ## todo
 
-* Complete VERY basic authentication
 * Complete markup for the following:
     - General dashboard
     - Run scene button
