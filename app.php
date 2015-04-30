@@ -3,8 +3,6 @@ require __DIR__.'/environment.php';
 require __DIR__.'/vendor/autoload.php';
 require __DIR__.'/Robot/helpers.php';
 
-session_start();
-
 $app = new \Slim\App;
 $view = new League\Plates\Engine(__DIR__.'/templates');
 

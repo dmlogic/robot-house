@@ -5,10 +5,12 @@ use Slim\Http\Cookies;
 
 class Auth {
 
+    private $session;
     private $request;
     private $response;
     private $encrypter;
-    private $cookieDecoded;
+    private $sessionId;
+    private $browserSignature;
 
     /**
      * Make a new instance. Allow injection of HTTP objects separately from __invoke
@@ -23,6 +25,7 @@ class Auth {
 
         // Will be needing this for cookies
         $this->encrypter = new Encrypter(ENCRYPT_KEY);
+        $this->session   = new Session;
     }
 
     /**
@@ -63,49 +66,30 @@ class Auth {
             return $next($request, $this->response);
         }
 
-        // The cookie was good and we've logged in. Carry on
-        if($this->checkLoginFromCookie()) {
-            return $next($request, $this->response);
-        }
-
         // Not authenticated
         return $this->response->withRedirect('/login?reason=1',403);
     }
 
     /**
-     * We're going to assume that as long as a valid cookie in UUID format is
-     * present, we're logged in.
-     *
-     * @return boolean
-     */
-    public function checkLoginFromCookie()
-    {
-        if(empty($this->cookieDecoded) || strlen($this->cookieDecoded) !== 36) {
-            return false;
-        }
-
-        $this->login();
-        return true;
-    }
-
-    /**
-     * A login is simply a session value that matches our cookie value.
-     * We set them both here.
+     * A login is a memcached browser signature against a UUID
      *
      * @return void
      */
     public function login()
     {
-        $host = $this->request->getHeader('HTTP_HOST');
-        $host = reset($host);
-        $newLoginCookie = Uuid::v4();
+        $host            = $this->request->getHeader('HTTP_HOST');
+        $host            = reset($host);
 
-        $_SESSION['robotauth'] = $newLoginCookie;
+        $newSessionId    = Uuid::v4();
+        $newSessionValue = $this->getBrowserSignature();
+
+        $this->session->set($newSessionId,$newSessionValue);
+
         $cookieVars = [
-            'value'    => $this->encrypter->encrypt($newLoginCookie),
+            'value'    => $this->encrypter->encrypt($newSessionId),
             'domain'   => $host,
             'path'     => '/',
-            'expires'  => time()+60*60*24*30,
+            'expires'  => time()+60*60*24*29,
             'secure'   => false,
             'httponly' => false
         ];
@@ -118,19 +102,37 @@ class Auth {
     }
 
     /**
+     * We'll take a very basic snapshot of the user agent and use that
+     * for a session value. Simple to spoof but sufficient security for
+     * this purpose.
+     *
+     * @return string
+     */
+    private function getBrowserSignature()
+    {
+        if(empty($this->browserSignature)) {
+            $header = $this->request->getHeader('HTTP_USER_AGENT');
+            $header = reset($header);
+            $this->browserSignature = preg_replace('/[^a-z]/i', '',$header);
+        }
+
+        return $this->browserSignature;
+    }
+
+    /**
      * Check if we have a valid current session
      *
      * @return boolean
      */
     private function checkSession()
     {
-        if(empty($_SESSION['robotauth'])) {
+        $this->decodeCookie();
+
+        if(empty($this->sessionId)) {
             return false;
         }
 
-        $this->decodeCookie();
-
-        if($_SESSION['robotauth'] != $this->cookieDecoded) {
+        if($this->getBrowserSignature() !== $this->session->get($this->sessionId)) {
             return false;
         }
 
@@ -149,6 +151,6 @@ class Auth {
             return;
         }
 
-        $this->cookieDecoded = $this->encrypter->decrypt($cookies[AUTH_COOKIE_NAME]);
+        $this->sessionId = $this->encrypter->decrypt($cookies[AUTH_COOKIE_NAME]);
     }
 }
