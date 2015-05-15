@@ -9,29 +9,29 @@
 <div class="panel panel-primary">
     <div class="panel-heading"><span class="glyphicon glyphicon-star"></span> Shortcuts</div>
     <div class="panel-body">
-        <a class="btn btn-default" href="#">Arm doors <span class="glyphicon glyphicon-play"></span></a>
-        <a class="btn btn-success" href="#"><span class="glyphicon glyphicon-ok"></span> Disarm doors</a>
-        <a class="btn btn-default" href="#">Hot water boost <span class="glyphicon glyphicon-play"></span></a>
+        <a class="btn btn-default btn-shortcut" href="#">Arm doors <span class="glyphicon glyphicon-play"></span></a>
+        <a class="btn btn-success btn-shortcut" href="#"><span class="glyphicon glyphicon-ok"></span> Disarm doors</a>
+        <a class="btn btn-default btn-shortcut" href="#">Hot water boost <span class="glyphicon glyphicon-play"></span></a>
     </div>
 </div>
 
 <div class="panel panel-primary">
     <div class="panel-heading"><span class="glyphicon glyphicon-home"></span> Rooms</div>
     <div class="panel-body">
-        <a class="btn btn-default" href="#">Lounge</a>
-        <a class="btn btn-default" href="#">Hallway</a>
-        <a class="btn btn-default" href="#">Outside</a>
+        <a class="btn btn-default btn-shortcut" href="room/lounge">Lounge</a>
+        <a class="btn btn-default btn-shortcut" href="#">Hallway</a>
+        <a class="btn btn-default btn-shortcut" href="#">Outside</a>
     </div>
 </div>
 
 <div class="panel panel-primary">
     <div class="panel-heading"><span class="glyphicon glyphicon-asterisk"></span> Heating modes</div>
     <div class="panel-body">
-        <a class="btn btn-default" href="#">Evening <span class="glyphicon glyphicon-play"></a>
-        <a class="btn btn-success" href="#"><span class="glyphicon glyphicon-ok"></span> Daytime</a>
-        <a class="btn btn-default" href="#">Night <span class="glyphicon glyphicon-play"></a>
-        <a class="btn btn-default" href="#">Cold weekend <span class="glyphicon glyphicon-play"></a>
-        <a class="btn btn-default" href="#">Cold working day <span class="glyphicon glyphicon-play"></a>
+        <a class="btn btn-default btn-shortcut" href="#">Evening <span class="glyphicon glyphicon-play"></span></a>
+        <a class="btn btn-success btn-shortcut" href="#"><span class="glyphicon glyphicon-ok"></span> Daytime</a>
+        <a class="btn btn-default btn-shortcut" href="#">Night <span class="glyphicon glyphicon-play"></span></a>
+        <a class="btn btn-default btn-shortcut" href="#">Cold weekend <span class="glyphicon glyphicon-play"></span></a>
+        <a class="btn btn-default btn-shortcut" href="#">Cold working day <span class="glyphicon glyphicon-play"></span></a>
     </div>
 </div>
 

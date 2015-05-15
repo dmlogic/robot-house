@@ -17,6 +17,18 @@ $app->get('/', function($request,$response) use($view) {
 })->add(new Robot\Auth);
 
 /**
+ * Room display
+ */
+$app->get('/room/{name}', function ($request, $response, $args) use ($view) {
+    $data = [
+        'message' => null,
+        'title'   => 'Lounge',
+        'lights'  => [],
+        'climate' => []
+    ];
+    return $response->write( $view->render('room',$data) );
+});
+/**
  * Login form
  */
 $app->get('/login', function($request,$response) use($view) {

@@ -1,7 +1,31 @@
 .panel-heading {
     font-size: 18px;
 }
-.btn {
+
+.btn-shortcut {
     display:inline-block;
     margin:5px;
+}
+
+.well {
+    background:#E0E0E0;
+}
+
+.go-back {
+    margin-top:15px;
+}
+
+.device-title {
+    margin-top:0;
+    margin-bottom:30px;
+    font-size:20px;
+}
+
+.temp-wrap {
+    margin-bottom:10px;
+}
+
+.currently {
+    font-size:18px;
+    margin-bottom:15px;
 }
