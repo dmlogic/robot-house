@@ -6,8 +6,6 @@ devices on a Vera Lite
 ## todo
 
 * Complete markup for the following:
-    - General dashboard
-    - Run scene button
     - General "Room"
     - Dimmer control
     - Relay control

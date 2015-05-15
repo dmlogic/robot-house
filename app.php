@@ -12,7 +12,8 @@ $view = new League\Plates\Engine(__DIR__.'/templates');
  * Dashboard route
  */
 $app->get('/', function($request,$response) use($view) {
-    return $response->write('hello world');
+    $data = ['message' => null ];
+    return $response->write( $view->render('dashboard',$data) );
 })->add(new Robot\Auth);
 
 /**
