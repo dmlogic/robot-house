@@ -1,2 +1,4 @@
 vendor
 environment.php
+database
+*.csv

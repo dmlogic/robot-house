@@ -3,6 +3,8 @@ require __DIR__.'/environment.php';
 require __DIR__.'/vendor/autoload.php';
 require __DIR__.'/Robot/helpers.php';
 
+$db = new PDO('sqlite:'.__DIR__.'/database');
+
 $app = new \Slim\App;
 $view = new League\Plates\Engine(__DIR__.'/templates');
 
@@ -10,7 +12,7 @@ $view = new League\Plates\Engine(__DIR__.'/templates');
  * Dashboard route
  */
 $app->get('/', function($request,$response) use($view) {
-    return $response;
+    return $response->write('hello world');
 })->add(new Robot\Auth);
 
 /**
