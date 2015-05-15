@@ -38,16 +38,24 @@
 <h2 class="page-header">Climate</h2>
 
 <div class="well device-wrap">
-    <p class="currently pull-right">
-        <label class="label label-primary">Currently <span class="badge">16</span></label>
-    </p>
     <h3 class="device-title">Room temperature</h3>
     <div class="row">
         <div class="col-xs-8">
             <input id="ex2" data-slider-id='ex2Slider' type="text" data-slider-min="5" data-slider-max="25" data-slider-step="1" data-slider-value="16"/>
         </div>
         <div class="col-xs-4">
+            <p class="temperature text-center">16&deg;</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-8">
             <input type="number" class="form-control" value="16">
+        </div>
+        <div class="col-xs-4">
+            <p>Battery</p>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-warning" style="width: 20%;"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -58,8 +66,16 @@
         <div class="col-xs-8">
             <input id="ex2" data-slider-id='ex2Slider' type="text" data-slider-min="5" data-slider-max="25" data-slider-step="1" data-slider-value="16"/>
         </div>
-        <div class="col-xs-4">
+    </div>
+    <div class="row">
+        <div class="col-xs-8">
             <input type="number" class="form-control" value="16">
+        </div>
+        <div class="col-xs-4">
+            <p>Battery</p>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-danger" style="width: 10%;"></div>
+            </div>
         </div>
     </div>
 </div>

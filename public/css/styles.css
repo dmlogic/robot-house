@@ -29,3 +29,8 @@
     font-size:18px;
     margin-bottom:15px;
 }
+
+.temperature {
+    font-size:30px;
+    font-weight:bold;
+}

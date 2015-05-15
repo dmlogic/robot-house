@@ -5,13 +5,6 @@ devices on a Vera Lite
 
 ## todo
 
-* Complete markup for the following:
-    - General "Room"
-    - Dimmer control
-    - Relay control
-    - Thermostat control
-    - Battery state
-* Routes for Dashboard and room
 * Config strategy for what gets displayed on Dash and Rooms
 * JS to render Dash
 * JS to render a room
