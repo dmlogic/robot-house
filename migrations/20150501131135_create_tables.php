@@ -30,6 +30,7 @@ class CreateTables extends AbstractMigration
         $table = $this->table('scenes');
         $table->addColumn('number', 'integer')
               ->addColumn('name', 'string')
+              ->addColumn('active', 'integer',['default' => 0])
               ->addIndex(['number'], ['unique' => true])
               ->create();
 

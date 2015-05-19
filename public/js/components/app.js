@@ -1,3 +1,9 @@
+var Robot = function() {
+}
+
+Robot.dash = function() {
+    alert("hi");
+}
 /*
 var myDimmer = new Dimmer(1,50);
     myDimmer.render($(".container"));

@@ -3,16 +3,26 @@ require __DIR__.'/environment.php';
 require __DIR__.'/vendor/autoload.php';
 require __DIR__.'/Robot/helpers.php';
 
-$db = new PDO('sqlite:'.__DIR__.'/database');
+# Services
+$db        = new PDO('sqlite:'.__DIR__.'/database');
+$session   = new Robot\Session;
+$house     = new Robot\House($db,$session);
+$app       = new Slim\App;
+$view      = new League\Plates\Engine(__DIR__.'/templates');
 
-$app = new \Slim\App;
-$view = new League\Plates\Engine(__DIR__.'/templates');
-
+$app->get('/all', function($request,$response) use($house) {
+    return $response->write( json_encode($house->getAllStatus()) );
+})->add(new Robot\Auth);
 /**
  * Dashboard route
  */
-$app->get('/', function($request,$response) use($view) {
-    $data = ['message' => null ];
+$app->get('/', function($request,$response) use($view, $house) {
+    $data = [
+        'message'  => null,
+        'shortcuts' => $house->getShortcuts(),
+        'rooms' => $house->getRooms(),
+        'heating'  => $house->getHeating()
+    ];
     return $response->write( $view->render('dashboard',$data) );
 })->add(new Robot\Auth);
 

@@ -1,5 +1,14 @@
 <?php $this->layout('layout', ['title' => 'Dashboard']) ?>
 
+<?php $this->start('script') ?>
+<script>
+    Robot.shortcuts = '<?php echo json_encode($shortcuts) ?>';
+    Robot.rooms = '<?php echo json_encode($rooms) ?>';
+    Robot.heating = '<?php echo json_encode($heating) ?>';
+    Robot.dash();
+</script>
+<?php $this->stop() ?>
+
 <?php if($message) :?>
     <div class="alert alert-success" role="alert"><?=$this->e($message)?></div>
 <?php endif; ?>
@@ -14,6 +23,9 @@
         <a class="btn btn-default btn-shortcut" href="#">Hot water boost <span class="glyphicon glyphicon-play"></span></a>
     </div>
 </div>
+<script>
+ var
+</script>
 
 <div class="panel panel-primary">
     <div class="panel-heading"><span class="glyphicon glyphicon-home"></span> Rooms</div>

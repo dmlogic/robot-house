@@ -25,7 +25,9 @@ class Auth {
 
         // Will be needing this for cookies
         $this->encrypter = new Encrypter(ENCRYPT_KEY);
-        $this->session   = new Session;
+
+        global $session;
+        $this->session = $session;
     }
 
     /**

@@ -30,8 +30,8 @@
 <div class="well device-wrap">
     <h3 class="device-title">Shelf lights</h3>
     <p>
-        <button class="btn btn-success">On</button>
-        <button class="btn btn-default">Off</button>
+        <button class="btn btn-default">On</button>
+        <button class="btn btn-danger">Off</button>
     </p>
 </div>
 

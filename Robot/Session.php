@@ -1,8 +1,9 @@
 <?php namespace Robot;
 
 use Memcached;
+use Pimple\ServiceProviderInterface;
 
-class Session {
+class Session implements ServiceProviderInterface {
 
     protected $memcached;
 
@@ -12,9 +13,16 @@ class Session {
         $this->memcached->addServer(MEMCACHED_HOST,MEMCACHED_PORT);
     }
 
-    public function set($key,$value)
+    public function register(\Pimple\Container $container)
     {
-        $expire = 60*60*24*29;
+        $container['session'] = $this;
+    }
+
+    public function set($key,$value,$expire = null)
+    {
+        if(!$expire) {
+            $expire = 60*60*24*29;
+        }
         if(!$this->memcached->set( $key , $value , $expire ) ) {
             throw new \RuntimeException("Cannot save session");
         }
