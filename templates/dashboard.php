@@ -38,7 +38,10 @@
 
     <div class="panel panel-primary">
         <div class="panel-heading"><span class="glyphicon glyphicon-asterisk"></span> Heating modes</div>
-        <div class="panel-body" id="dash-heating">
+        <div class="panel-body">
+            <p>May take up to half an hour to apply</p>
+            <div id="dash-heating">
+            </div>
         </div>
     </div>
 
