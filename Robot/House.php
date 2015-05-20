@@ -144,6 +144,24 @@ class House {
     private function setSceneStates()
     {
         $this->scenes = $this->connector->assignSceneStates($this->scenes);
+        $this->revoltingHotWaterFix();
+    }
+
+    /**
+     * I hate this, but the data is junk
+     *
+     * @return void
+     */
+    private function revoltingHotWaterFix()
+    {
+        $hotWaterScene = 2;
+        $hotWaterDevice = 34;
+
+        if($this->devices[$hotWaterDevice]->state == 'Off') {
+            $this->scenes[$hotWaterScene]->active = false;
+        } else {
+            $this->scenes[$hotWaterScene]->active = true;
+        }
     }
 
     /**

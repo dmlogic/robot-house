@@ -9,7 +9,7 @@ Thermostat.prototype.render = function(appendTo) {
 
     bat = new Battery([this.battery,this.label]);
 
-    str =  '<div class="well device-wrap">'+
+    str =  '<div class="well device-wrap" data-type="stat">'+
                 '<h3 class="device-title">'+this.label+'</h3>'+
                 '<div class="row">'+
                     '<div class="col-xs-8">'+

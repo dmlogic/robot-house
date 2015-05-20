@@ -1,6 +1,16 @@
 <?php $this->layout('layout', ['title' => 'Dashboard']) ?>
 
 <?php $this->start('script') ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap-slider.min.js"></script>
+<script src="/js/components/device.js"></script>
+<script src="/js/components/dimmer.js"></script>
+<script src="/js/components/relay.js"></script>
+<script src="/js/components/battery.js"></script>
+<script src="/js/components/thermostat.js"></script>
+<script src="/js/components/shortcut.js"></script>
+<script src="/js/components/app.js"></script>
 <script>
     Robot.shortcuts = <?php echo json_encode($shortcuts) ?>;
     Robot.rooms = <?php echo json_encode($rooms) ?>;

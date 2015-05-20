@@ -108,6 +108,10 @@ class Mios implements Connector {
                     $devices[$key]->battery_level = (int) $this->findKeyValue('BatteryLevel',$d['states']);
                     $devices[$key]->is_battery = true;
                     break;
+                case 'hvac':
+                    $devices[$key]->state = $this->findKeyValue('ModeStatus',$d['states']);
+                    break;
+
             }
         }
 

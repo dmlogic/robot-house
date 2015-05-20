@@ -8,7 +8,7 @@ Relay.prototype.constructor = Relay;
 Relay.prototype.render = function(appendTo) {
     onClass = (this.status == 'on') ? 'success' : 'default';
     offClass = (this.status == 'on') ? 'default' : 'danger';
-    str = '<div class="well device-wrap">'+
+    str = '<div class="well device-wrap" data-device-type="'+this.type+'">'+
             '<h3 class="device-title">'+this.label+'</h3>'+
             '<button class="btn btn-'+onClass+'">On</button>'+
             '<button class="btn btn-'+offClass+'">Off</button>'+
@@ -20,10 +20,11 @@ Relay.prototype.render = function(appendTo) {
 Relay.prototype.setValues = function(values) {
     this.id = values.device_id;
     this.label = values.name;
-    this.level = values.state;
-    this.status = 'off';
-    if(values.state > 0) {
-        this.status = 'on';
+    this.type = values.type;
+    if(this.type == 'hvac') {
+        this.status = (values.state == 'Off') ? 'off' : 'on';
+    } else {
+        this.status = (values.state > 0) ? 'on' : 'off';
     }
 }
 

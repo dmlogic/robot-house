@@ -8,7 +8,7 @@ Dimmer.prototype.constructor = Dimmer;
 Dimmer.prototype.render = function(appendTo) {
     onClass = (this.status == 'on') ? 'success' : 'default';
     offClass = (this.status == 'on') ? 'default' : 'danger';
-    str = '<div class="well device-wrap">'+
+    str = '<div class="well device-wrap" data-device-type="dimmer">'+
             '<h3 class="device-title">'+this.label+'</h3>'+
             '<p>'+
             '<input id="device'+this.id+'" name="device'+this.id+'" data-slider-id="device'+this.id+'" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="5" data-slider-value="'+this.level+'"/>'+

@@ -49,6 +49,11 @@ Robot.room = function() {
                     Robot.devices[devName].render(cWrap);
                     heating = true;
                     break;
+                case 'hvac':
+                    Robot.devices[devName] = new Relay(room.devices[devId]);
+                    Robot.devices[devName].render(cWrap);
+                    heating = true;
+                    break;
             }
         }
 
@@ -99,6 +104,17 @@ Robot.dash = function() {
         sc.render(rWrap);
     })
 
+    function renderHeatingStatus() {
+        str = '<hr><div class="row">';
+        $.each(Robot.rooms.services.devices,function(i,s){
+            cls = (s.state == 'Off') ? 'info' : 'danger';
+            str += '<div class="col-xs-6"><p>'+s.name+': <span class="label label-'+cls+'">'+s.state+'</label></p></div>';
+        })
+
+        str += '</div>';
+        rWrap.append(str);
+    }
+
     var batteryDevices = [];
 
     function renderBatteries() {
@@ -107,13 +123,13 @@ Robot.dash = function() {
         $.each(Robot.rooms,function(i,room) {
             var roomName = room.name;
             for(var devId in room.devices) {
-                if(room.devices[devId].is_battery === true && room.devices[devId].battery_level < 50) {
+                if(room.devices[devId].is_battery === true && room.devices[devId].battery_level <= 20) {
                     room.devices[devId].room_name = roomName;
                     collected.push([room.devices[devId].battery_level,roomName+': '+room.devices[devId].name]);
                 }
             }
         })
-        if(!collected) {
+        if(!collected.length) {
             return false;
         }
         collected.sort(function(a, b) {return a[0] - b[0]});
@@ -127,6 +143,8 @@ Robot.dash = function() {
     if(renderBatteries()) {
         $("#battery-panel").removeClass("hidden");
     }
+
+    renderHeatingStatus();
 }
 
 window.onhashchange = Robot.route;
