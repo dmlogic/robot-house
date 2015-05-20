@@ -8,9 +8,7 @@ interface Connector {
 
     public function assignSceneStates(Collection $scenes);
 
-    public function setDimmer($id,$value);
-
-    public function setRelay($id,$value);
+    public function setDevice($id,$type,$value);
 
     public function runScene($number);
 }

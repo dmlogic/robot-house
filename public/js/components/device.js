@@ -5,3 +5,6 @@ Device.prototype.setValues = function(values) {
     this.id = values.id;
     this.state = values.state;
 }
+
+Device.prototype.setPending = function(values) {
+}

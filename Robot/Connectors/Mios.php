@@ -101,6 +101,7 @@ class Mios implements Connector {
                     $devices[$key]->state = (int) $this->findKeyValue('CurrentSetpoint',$d['states']);
                     $devices[$key]->battery_level = (int) $this->findKeyValue('BatteryLevel',$d['states']);
                     $devices[$key]->is_battery = true;
+                    $devices[$key]->wakeup = ceil( $this->findKeyValue('WakeupInterval',$d['states']) / 60 );
                     break;
                 case 'stat':
                     $devices[$key]->current = (int) $this->findKeyValue('CurrentTemperature',$d['states']);
@@ -134,12 +135,81 @@ class Mios implements Connector {
         }
     }
 
-    public function setDimmer($id,$value) {
+    /**
+     * Set the appropriate var as per capabiities established here:
+     * http://IP:3480/data_request?id=invoke&DeviceNum=ID
+     *
+     * @param int $id
+     * @param string $type
+     * @param mixed $value
+     */
+    public function setDevice($id,$type,$value) {
 
+        $action = 'data_request?id=action&output_format=json&DeviceNum=' . (int) $id;
+
+        switch($type) {
+            case 'dimmer':
+                $action .= '&serviceId=urn:upnp-org:serviceId:Dimming1&action=SetLoadLevelTarget&newLoadlevelTarget='.(int) $value;
+                break;
+            case 'light':
+                $target = ($value) ? 1 : 0;
+                $action .= '&serviceId=urn:upnp-org:serviceId:SwitchPower1&action=SetTarget&newTargetValue=' . $target;
+                break;
+            case 'rad':
+            case 'stat':
+                $action .= '&serviceId=urn:upnp-org:serviceId:TemperatureSetpoint1_Heat&action=SetCurrentSetpoint&NewCurrentSetpoint=' .(int) $value;
+                break;
+            case 'hvac':
+                $target = ($value) ? 'HeatOn' : 'Off';
+                $action .= '&serviceId=urn:upnp-org:serviceId:HVAC_UserOperatingMode1&action=SetModeTarget&NewModeTarget='.$target ;
+                break;
+        }
+
+        try {
+            $resp =  $this->client->get($action);
+            $raw = $resp->json();
+            return $this->handleJobResponse($resp->json());
+
+        } catch(\Exception $e) {
+            return false;
+        }
     }
 
-    public function setRelay($id,$value) {
+    private function handleJobResponse($resp)
+    {
+        $resp = reset($resp);
+        if(!array_key_exists('JobID', $resp)) {
+            return false;
+        }
 
+        // Vera needs a little time to digest this
+        sleep(1);
+
+        // Now we need another to call to see what happened
+        try {
+            $action = 'data_request?id=jobstatus&output_format=json&plugin=zwave&&job='.$resp['JobID'];
+            $resp =  $this->client->get($action);
+            $result = $resp->json();
+        } catch(\Exception $e) {
+            return false;
+        }
+
+        switch($result['status']) {
+            // The job failed
+            case 2:
+            case 3:
+            case 6:
+                return false;
+                break;
+            // The job is done
+            case -1:
+            case 4:
+                return true;
+                break;
+            // Anything else means it's pending on wake-up
+            default:
+                return 'pending';
+        }
     }
 
     public function runScene($number) {

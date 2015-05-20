@@ -35,7 +35,8 @@
     font-weight:bold;
 }
 
-.scene-pending {
+.scene-pending,
+.device-wrap.pending h3 {
     background-image: url(../images/ajax-loader.gif);
     background-repeat: no-repeat;
     background-position: 5px center;
@@ -44,4 +45,8 @@
 
 .scene-pending .glyphicon {
     display:none;
+}
+.device-wrap.pending h3 {
+    background-position: right center;
+    padding-left:0;
 }

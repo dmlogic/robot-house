@@ -10,6 +10,9 @@ $house     = new Robot\House($connector);
 $app       = new Slim\App;
 $view      = new League\Plates\Engine(BASE_DIR.'templates');
 
+$app->get('/debug', function($request,$response) use($connector) {
+});
+
 /**
  * Dashboard route
  */
@@ -26,9 +29,21 @@ $app->get('/refresh', function($request,$response) use($house) {
 
 })->add(new Robot\Auth);
 
-$app->get('/debug', function($request,$response) use($connector) {
-});
+/**
+ * Set a device
+ */
+$app->post('/set-device', function($request,$response) use($connector, $house) {
 
+    $result = $connector->setDevice($request->getParam('id'),$request->getParam('type'),$request->getParam('value'));
+    if($result === false) {
+        return $response->withStatus(400);
+    }
+    if($result == 'pending') {
+        $response = $response->withStatus(202);
+    }
+    return $response->write( json_encode( $house->dashData() ) )->withHeader('Content-type','application/json');
+
+})->add(new Robot\Auth);
 /**
  * Run a Scene
  */
@@ -40,7 +55,6 @@ $app->post('/run-scene', function($request,$response) use($connector, $house) {
     return $response->write( json_encode( $house->dashData() ) )->withHeader('Content-type','application/json');
 
 })->add(new Robot\Auth);
-
 
 /**
  * Login form

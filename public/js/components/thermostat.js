@@ -9,7 +9,7 @@ Thermostat.prototype.render = function(appendTo) {
 
     bat = new Battery([this.battery,this.label]);
 
-    str =  '<div class="well device-wrap" data-type="stat">'+
+    str =  '<div class="well device-wrap" data-type="stat" id="device-wrap'+this.id+'">'+
                 '<h3 class="device-title">'+this.label+'</h3>'+
                 '<div class="row">'+
                     '<div class="col-xs-8">'+
@@ -19,7 +19,7 @@ Thermostat.prototype.render = function(appendTo) {
                 '</div>'+
                 '<div class="row">'+
                     '<div class="col-xs-8">'+
-                        '<input type="number" class="form-control" min="5" max="25" value="'+this.level+'">'+
+                        '<input type="number" class="form-control" min="5" max="25" data-stat="'+this.id+'" value="'+this.level+'">'+
                     '</div>'+
                     '<div class="col-xs-4">'+
                         '<p>Battery</p>'+
@@ -35,6 +35,16 @@ Thermostat.prototype.render = function(appendTo) {
     }
 
     this.sliderObject = $("#device"+this.id).slider();
+    var resId = this.id;
+    this.sliderObject.on("slideStop",function(res){
+        Robot.setDevice(resId,'stat',res.value);
+    });
+}
+
+Thermostat.prototype.setPending = function(values) {
+    $('[data-stat="'+this.id+'"]').attr("disabled","disabled");
+    this.sliderObject.slider("disable");
+    $('#device-wrap'+this.id).addClass("pending");
 }
 
 Thermostat.prototype.setValues = function(values) {
@@ -44,11 +54,6 @@ Thermostat.prototype.setValues = function(values) {
     this.current = values.current;
     this.type = values.type;
     this.battery = values.battery_level;
-}
-
-Thermostat.prototype.changeDeviceValue = function(value) {
-    $("#device"+this.id).val(this.state);
-    this.sliderObject.slider('setValue',value);
 }
 
 Thermostat.prototype.currentTemp = function(value) {

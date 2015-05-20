@@ -11,6 +11,7 @@
 <script src="/js/components/thermostat.js"></script>
 <script src="/js/components/shortcut.js"></script>
 <script src="/js/components/app.js"></script>
+<script src="/js/components/listeners.js"></script>
 <script>
     Robot.shortcuts = <?php echo json_encode($shortcuts) ?>;
     Robot.rooms = <?php echo json_encode($rooms) ?>;

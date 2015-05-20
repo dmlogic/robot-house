@@ -5,10 +5,5 @@ devices on a Vera Lite
 
 ## todo
 
-* JS to handle changing a device
-    - Make the call to Vera
-    - Get the job details
-    - Check the job progress
-    - Update the device/cache on completion
-* Hosting and domain access
-* More I'm sure 
+* Display pending message in the event of a non code 4
+* timed refresh of everything

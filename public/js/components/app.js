@@ -161,13 +161,20 @@ Robot.dash = function() {
     renderHeatingStatus();
 }
 
-Robot.refreshDashWith = function(data) {
+Robot.refreshDash = function(data) {
+    $("#dash-shortcuts, #dash-rooms, #dash-heating, #battery-wrap").html("");
+    Robot.dash();
+}
+
+Robot.refreshData = function(data) {
     Robot.rooms = data.rooms;
     Robot.shortcuts = data.shortcuts;
     Robot.dashRendered = false;
+}
 
-    $("#dash-shortcuts, #dash-rooms, #dash-heating, #battery-wrap").html("");
-    Robot.dash();
+Robot.refreshRoom = function(data) {
+    $("#dash-shortcuts, #dash-rooms, #dash-heating, #battery-wrap, #lights-devices, #climate-devices").html("");
+    Robot.room();
 }
 
 Robot.runScene = function(el) {
@@ -188,19 +195,35 @@ Robot.runScene = function(el) {
       url: '/run-scene',
       data: 'scene='+el.data('scene'),
       success: function(resp) {
-        Robot.refreshDashWith(resp);
+        Robot.refreshDash(resp);
       },
       error:function(resp) {
         Robot.showMessage("Scene could not be run");
         $(".scene-pending").removeClass('scene-pending');
       }
+    }).always(function(){
+        Robot.dash();
     });
 }
-/**
- * Event listeners
- */
-window.onhashchange = Robot.route;
-document.getElementById("back").addEventListener("click",function(){ location.hash = ''; });
-$(document).on("click","[data-scene]",function(){
-    Robot.runScene($(this));
-})
+
+Robot.setDevice = function(id,type,value) {
+
+    var devName = 'device'+room.devices[id].device_id;
+    Robot.devices[devName].setPending();
+
+    $.ajax({
+      type: "POST",
+      url: '/set-device',
+      data: {"id":id,"type":type,"value":value}
+    }).done(function(resp,stat,xhr) {
+        if(xhr.status == 202) {
+            // Robot.showMessage("Request for value change to "+value+" is pending");
+        }
+        Robot.refreshData(resp);
+    }).fail(function() {
+        Robot.showMessage("Device could not be set");
+    }).always(function(){
+        Robot.refreshRoom();
+    });
+
+}
