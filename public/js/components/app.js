@@ -126,7 +126,7 @@ Robot.dash = function() {
         })
 
         str += '</div>';
-        rWrap.append(str);
+        hWrap.append(str);
     }
 
     var batteryDevices = [];
