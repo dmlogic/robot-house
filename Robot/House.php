@@ -1,118 +1,177 @@
 <?php namespace Robot;
-
-use GuzzleHttp\Client;
-use Robot\Connectors\Mios;
+/**
+ * Get/Set all data about a House
+ */
+use Robot\Session;
+use Robot\Collection;
+use Robot\Connectors\Connector;
 
 class House {
 
-    private $db;
-    private $session;
+    /**
+     * All the rooms in the house
+     *
+     * @var array
+     */
+    private $rooms;
+
+    /**
+     * All the devices in the house
+     *
+     * @var Robot\Collection
+     */
+    private $devices;
+
+    /**
+     * All the scenes in the house
+     *
+     * @var Robot\Collection
+     */
+    private $scenes;
+
+    /**
+     * All the shorcuts for the Dashboard
+     *
+     * @var Robot\Collection
+     */
+    private $shorcuts;
+
+    /**
+     * The connection to HA data source
+     *
+     * @var Robot\Connectors\Connector
+     */
     private $connector;
 
-    private $scenes = [];
-    private $devices = [];
+    /**
+     * How long to hang on to device states
+     *
+     * @var integer
+     */
+    private $expire;
 
-    private $expires;
-
-    public function __construct($db,$session)
+    public function __construct(Connector $connector)
     {
-        $this->db = $db;
-        $this->session = $session;
-        $this->connect();
+        $this->connector = $connector;
+        $this->rooms     = [];
+        $this->devices   = new Collection;
+        $this->scenes    = new Collection;
+    }
 
-        $this->expires = 60*5;
+    /**
+     * Get the structure of the house as rooms and contained devices
+     *
+     * @return Robot\Collection
+     */
+    public function getStructure()
+    {
+        $this->lookupRoomsAndDevices();
+        $this->setDeviceStates();
 
-        $this->loadElements();
+        $out = $this->rooms;
+        foreach ($this->devices as $key => $device) {
+            $out[$device->room]['devices'][$key] = $device;
+        }
+
+        return $out;
+    }
+
+    /**
+     * Get all the scenes for the house
+     *
+     * @return Robot\Collection
+     */
+    public function getScenes()
+    {
+        $this->lookupScenes();
+        $this->setSceneStates();
+
+        return $this->scenes;
     }
 
     public function getShortcuts()
     {
-        $query = $this->db->prepare("SELECT * FROM shortcuts WHERE type = 'shortcut' ORDER BY sort_order ASC");
-        $query->execute();
-        return $query->fetchAll(\PDO::FETCH_ASSOC);
-    }
+        $this->getScenes();
 
-    public function getRooms()
-    {
-        $query = $this->db->prepare("SELECT r.*
-                                     FROM shortcuts s
-                                     JOIN rooms r ON r.slug = s.room_slug
-                                     WHERE s.type = 'room'
-                                     ORDER BY s.sort_order ASC");
-        $query->execute();
-        return $query->fetchAll(\PDO::FETCH_ASSOC);
-    }
-    public function getHeating()
-    {
-        $query = $this->db->prepare("SELECT * FROM shortcuts WHERE type = 'heating' ORDER BY sort_order ASC");
-        $query->execute();
-        return $query->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    public function getAllStatus()
-    {
-        if(!$this->session->get('devicesCurrent')) {
-            $this->loadStatusFromConnector();
-            $this->session->set('devicesCurrent',"yes",$this->expires);
-        }
-
-        return ['devices' => $this->devices, 'scenes' => $this->scenes];
-    }
-
-    public function getOneStatus($id)
-    {
-        if(!array_key_exists($id, $this->devices)) {
-            return;
-        }
-
-        $this->getAllStatus();
-
-        return $this->devices[$id];
-    }
-
-    private function connect()
-    {
-        $this->connector = new Mios( new Client(['base_url' => MIOS_URL]) );
-    }
-
-    private function loadStatusFromConnector() {
-
-        list($this->devices,$this->scenes) = $this->connector->getAllStatus($this->devices,$this->scenes);
-        $this->session->set('devices',$this->devices,$this->expires);
-        $this->session->set('scenes',$this->scenes,$this->expires);
-    }
-
-    private function loadElements()
-    {
-        $this->devices = $this->session->get('devices');
-        $this->scenes = $this->session->get('scenes');
-
-        if(!$this->devices || !$this->scenes) {
-            $this->loadElementsFromDb();
-            $this->session->set('devices',$this->devices,$this->expires);
-            $this->session->set('scenes',$this->scenes,$this->expires);
-        }
-    }
-
-    private function loadElementsFromDb()
-    {
-        $sql = 'SELECT * FROM devices';
-        $query = $this->db->prepare($sql);
+        $sql = 'SELECT
+                    s.*,
+                    r.name room_name,
+                    c.name scene_name
+                FROM shortcuts s
+                LEFT JOIN rooms r ON s.room_slug = r.slug
+                LEFT JOIN scenes c ON s.scene_number = c.number
+                ORDER BY s.sort_order ASC';
+        $query = dbQuery($sql);
         $query->execute();
 
-        foreach($query->fetchAll(\PDO::FETCH_CLASS) as $d) {
-            $this->devices[ (int) $d->device_id] = $d;
+        $out = [];
+
+        foreach($query->fetchAll(\PDO::FETCH_CLASS) as $row) {
+            $row->active = false;
+            if($row->type != 'room') {
+                $row->active = $this->scenes[$row->scene_number]->active;
+            }
+            $out[$row->type][] = $row;
         }
 
+        return $out;
+    }
+
+    private function lookupScenes()
+    {
         $sql = 'SELECT * FROM scenes';
-        $query = $this->db->prepare($sql);
+        $query = dbQuery($sql);
         $query->execute();
 
-        foreach($query->fetchAll(\PDO::FETCH_CLASS) as $s) {
-            $this->scenes[$s->number] = $s;
+        foreach($query->fetchAll(\PDO::FETCH_CLASS) as $row) {
+            $this->scenes->set($row->number, $row);
         }
     }
 
+    /**
+     * Assign a current state to all devices from the Connector
+     */
+    private function setDeviceStates()
+    {
+        $this->devices = $this->connector->assignDeviceStates($this->devices);
+    }
 
+    /**
+     * Assign a current state to all scenes from the Connector
+     *
+     * @todo - Apply a fix for Hot Water Boost
+     */
+    private function setSceneStates()
+    {
+        $this->scenes = $this->connector->assignSceneStates($this->scenes);
+    }
 
+    /**
+     * Get all our rooms and devices from storage
+     *
+     * @return void
+     */
+    private function lookupRoomsAndDevices()
+    {
+        $sql = 'SELECT d.device_id,
+                d.room,
+                d.name,
+                d.type,
+                d.state,
+                d.is_battery,
+                d.battery_level,
+                r.name room_name
+              FROM devices d
+              LEFT JOIN rooms r on d.room = r.slug
+              GROUP BY d.device_id';
+            $query = dbQuery($sql);
+            $query->execute();
+
+        foreach($query->fetchAll(\PDO::FETCH_CLASS) as $row) {
+            if(!array_key_exists($row->room, $this->rooms) ) {
+                $this->rooms[$row->room] = ['name' => $row->room_name, 'devices' => [] ];
+            }
+            $this->devices->set($row->device_id, $row);
+        }
+    }
 }

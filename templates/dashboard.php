@@ -2,61 +2,56 @@
 
 <?php $this->start('script') ?>
 <script>
-    Robot.shortcuts = '<?php echo json_encode($shortcuts) ?>';
-    Robot.rooms = '<?php echo json_encode($rooms) ?>';
-    Robot.heating = '<?php echo json_encode($heating) ?>';
-    Robot.dash();
+    Robot.shortcuts = <?php echo json_encode($shortcuts) ?>;
+    Robot.rooms = <?php echo json_encode($rooms) ?>;
+    Robot.scenes = '<?php echo json_encode($scenes) ?>';
+    Robot.route();
 </script>
 <?php $this->stop() ?>
 
-<?php if($message) :?>
-    <div class="alert alert-success" role="alert"><?=$this->e($message)?></div>
-<?php endif; ?>
+<div class="alert alert-success hidden"><?=$this->e($message)?></div>
 
-<h1>Dashboard</h1>
+<div id="dash">
 
-<div class="panel panel-primary">
-    <div class="panel-heading"><span class="glyphicon glyphicon-star"></span> Shortcuts</div>
-    <div class="panel-body">
-        <a class="btn btn-default btn-shortcut" href="#">Arm doors <span class="glyphicon glyphicon-play"></span></a>
-        <a class="btn btn-success btn-shortcut" href="#"><span class="glyphicon glyphicon-ok"></span> Disarm doors</a>
-        <a class="btn btn-default btn-shortcut" href="#">Hot water boost <span class="glyphicon glyphicon-play"></span></a>
-    </div>
-</div>
-<script>
- var
-</script>
+    <h1>Dashboard</h1>
 
-<div class="panel panel-primary">
-    <div class="panel-heading"><span class="glyphicon glyphicon-home"></span> Rooms</div>
-    <div class="panel-body">
-        <a class="btn btn-default btn-shortcut" href="room/lounge">Lounge</a>
-        <a class="btn btn-default btn-shortcut" href="#">Hallway</a>
-        <a class="btn btn-default btn-shortcut" href="#">Outside</a>
-    </div>
-</div>
-
-<div class="panel panel-primary">
-    <div class="panel-heading"><span class="glyphicon glyphicon-asterisk"></span> Heating modes</div>
-    <div class="panel-body">
-        <a class="btn btn-default btn-shortcut" href="#">Evening <span class="glyphicon glyphicon-play"></span></a>
-        <a class="btn btn-success btn-shortcut" href="#"><span class="glyphicon glyphicon-ok"></span> Daytime</a>
-        <a class="btn btn-default btn-shortcut" href="#">Night <span class="glyphicon glyphicon-play"></span></a>
-        <a class="btn btn-default btn-shortcut" href="#">Cold weekend <span class="glyphicon glyphicon-play"></span></a>
-        <a class="btn btn-default btn-shortcut" href="#">Cold working day <span class="glyphicon glyphicon-play"></span></a>
-    </div>
-</div>
-
-<div class="panel panel-warning">
-    <div class="panel-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> Battery alerts</div>
-    <div class="panel-body">
-        <p>Bathroom Thermostat</p>
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped progress-bar-danger" style="width: 10%;">10%</div>
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="glyphicon glyphicon-star"></span> Shortcuts</div>
+        <div class="panel-body" id="dash-shortcuts">
         </div>
-        <p>Bedroom Radiator</p>
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped progress-bar-warning" style="width: 20%;">20%</div>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="glyphicon glyphicon-home"></span> Rooms</div>
+        <div class="panel-body" id="dash-rooms">
         </div>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="glyphicon glyphicon-asterisk"></span> Heating modes</div>
+        <div class="panel-body" id="dash-heating">
+        </div>
+    </div>
+
+    <div class="panel panel-warning hidden" id="battery-panel">
+        <div class="panel-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> Battery alerts</div>
+        <div class="panel-body" id="battery-wrap">
+        </div>
+    </div>
+</div>
+
+<div id="room">
+    <p class="go-back pull-right"><button class="btn btn-primary" type="button" id="back"><span class="glyphicon glyphicon-triangle-left"></span> Back</button></p>
+
+    <h1 id="room-name"></h1>
+
+    <div id="lights">
+        <h2 class="page-header">Lights</h2>
+        <div id="lights-devices"></div>
+    </div>
+
+    <div id="climate">
+        <h2 class="page-header">Climate</h2>
+        <div id="climate-devices"></div>
     </div>
 </div>

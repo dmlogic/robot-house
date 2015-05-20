@@ -2,6 +2,7 @@
 
 use J20\Uuid\Uuid;
 use Slim\Http\Cookies;
+use Robot\Session;
 
 class Auth {
 
@@ -25,9 +26,6 @@ class Auth {
 
         // Will be needing this for cookies
         $this->encrypter = new Encrypter(ENCRYPT_KEY);
-
-        global $session;
-        $this->session = $session;
     }
 
     /**
@@ -85,7 +83,7 @@ class Auth {
         $newSessionId    = Uuid::v4();
         $newSessionValue = $this->getBrowserSignature();
 
-        $this->session->set($newSessionId,$newSessionValue);
+        Session::set($newSessionId,$newSessionValue);
 
         $cookieVars = [
             'value'    => $this->encrypter->encrypt($newSessionId),
@@ -134,7 +132,7 @@ class Auth {
             return false;
         }
 
-        if($this->getBrowserSignature() !== $this->session->get($this->sessionId)) {
+        if($this->getBrowserSignature() !== Session::get($this->sessionId)) {
             return false;
         }
 

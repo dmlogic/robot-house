@@ -1,27 +1,25 @@
 <?php
-require __DIR__.'/environment.php';
-require __DIR__.'/vendor/autoload.php';
-require __DIR__.'/Robot/helpers.php';
+define('BASE_DIR',__DIR__.'/');
+require BASE_DIR.'environment.php';
+require BASE_DIR.'vendor/autoload.php';
+require BASE_DIR.'Robot/helpers.php';
 
 # Services
-$db        = new PDO('sqlite:'.__DIR__.'/database');
-$session   = new Robot\Session;
-$house     = new Robot\House($db,$session);
+$connector = new Robot\Connectors\Mios( new GuzzleHttp\Client(['base_url' => MIOS_URL]) );
+$house     = new Robot\House($connector);
 $app       = new Slim\App;
-$view      = new League\Plates\Engine(__DIR__.'/templates');
+$view      = new League\Plates\Engine(BASE_DIR.'templates');
 
-$app->get('/all', function($request,$response) use($house) {
-    return $response->write( json_encode($house->getAllStatus()) );
-})->add(new Robot\Auth);
 /**
  * Dashboard route
  */
 $app->get('/', function($request,$response) use($view, $house) {
+
     $data = [
-        'message'  => null,
+        'message'   => null,
+        'rooms'     => $house->getStructure(),
+        'scenes'    => $house->getScenes(),
         'shortcuts' => $house->getShortcuts(),
-        'rooms' => $house->getRooms(),
-        'heating'  => $house->getHeating()
     ];
     return $response->write( $view->render('dashboard',$data) );
 })->add(new Robot\Auth);

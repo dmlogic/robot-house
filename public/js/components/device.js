@@ -1,7 +1,7 @@
-var Device = function(id,state) {
-    this.id = id;
-    this.setState(state);
+var Device = function(values) {
+    this.setValues(values);
 }
-Device.prototype.setState = function(value) {
-    this.state = value;
+Device.prototype.setValues = function(values) {
+    this.id = values.id;
+    this.state = values.state;
 }

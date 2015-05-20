@@ -21,6 +21,10 @@
     <script src="/js/bootstrap-slider.min.js"></script>
     <script src="/js/components/device.js"></script>
     <script src="/js/components/dimmer.js"></script>
+    <script src="/js/components/relay.js"></script>
+    <script src="/js/components/shortcut.js"></script>
+    <script src="/js/components/battery.js"></script>
+    <script src="/js/components/thermostat.js"></script>
     <script src="/js/components/app.js"></script>
 
     <?=$this->section('script')?>

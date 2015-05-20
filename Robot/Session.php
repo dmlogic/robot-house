@@ -7,6 +7,8 @@ class Session implements ServiceProviderInterface {
 
     protected $memcached;
 
+    protected static $session;
+
     public function __construct()
     {
         $this->memcached = new Memcached;
@@ -18,18 +20,27 @@ class Session implements ServiceProviderInterface {
         $container['session'] = $this;
     }
 
-    public function set($key,$value,$expire = null)
+    protected static function instance()
+    {
+        if(!static::$session) {
+            static::$session = new static;
+        }
+
+        return static::$session;
+    }
+
+    public static function set($key,$value,$expire = null)
     {
         if(!$expire) {
             $expire = 60*60*24*29;
         }
-        if(!$this->memcached->set( $key , $value , $expire ) ) {
+        if(!static::instance()->memcached->set( $key , $value , $expire ) ) {
             throw new \RuntimeException("Cannot save session");
         }
     }
 
-    public function get($key)
+    public static function get($key)
     {
-        return $this->memcached->get($key);
+        return static::instance()->memcached->get($key);
     }
 }
