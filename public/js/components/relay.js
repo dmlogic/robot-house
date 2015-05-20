@@ -10,8 +10,8 @@ Relay.prototype.render = function(appendTo) {
     offClass = (this.status == 'on') ? 'default' : 'danger';
     str = '<div class="well device-wrap" data-device-type="'+this.type+'" id="device-wrap'+this.id+'">'+
             '<h3 class="device-title">'+this.label+'</h3>'+
-            '<button class="btn btn-'+onClass+'" data-relay="on" data-type="'+this.type+'" data-device-id="'+this.id+'">On</button>'+
-            '<button class="btn btn-'+offClass+'" data-relay="off" data-type="'+this.type+'" data-device-id="'+this.id+'">Off</button>'+
+            '<button class="btn btn-'+onClass+'" data-relay="1" data-type="'+this.type+'" data-device-id="'+this.id+'">On</button>'+
+            '<button class="btn btn-'+offClass+'" data-relay="0" data-type="'+this.type+'" data-device-id="'+this.id+'">Off</button>'+
             '</p>'+
         '</div>'
     appendTo.append(str);

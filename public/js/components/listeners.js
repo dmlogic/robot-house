@@ -1,8 +1,3 @@
-/**
- * Event listeners
- */
-
-// Routing
 window.onhashchange = Robot.route;
 
 // Back to Dash
@@ -15,17 +10,10 @@ $(document).on("click","[data-scene]",function(){
 
 // Light on/off
 $(document).on("click","[data-relay]",function(){
-    id = $(this).data('device-id')
-    type = $(this).data('type')
-    if($(this).data("relay") == 'on') {
-        Robot.setDevice(id,type,1);
-    } else {
-        Robot.setDevice(id,type,0);
-    }
+    Robot.setDevice($(this).data('device-id'),$(this).data('type'),$(this).data("relay"));
 })
 
 // Stat change
 $(document).on("change","[data-stat]",function(){
-    id = $(this).data('stat')
-    Robot.setDevice(id,'stat',$(this).val());
+    Robot.setDevice($(this).data('stat'),'stat',$(this).val());
 })

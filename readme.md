@@ -5,5 +5,5 @@ devices on a Vera Lite
 
 ## todo
 
-* Display pending message in the event of a non code 4
 * timed refresh of everything
+* Gulp for assets

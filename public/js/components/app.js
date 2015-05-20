@@ -193,22 +193,21 @@ Robot.runScene = function(el) {
     $.ajax({
       type: "POST",
       url: '/run-scene',
-      data: 'scene='+el.data('scene'),
-      success: function(resp) {
-        Robot.refreshDash(resp);
-      },
-      error:function(resp) {
+      data: 'scene='+el.data('scene')
+    }).done(function(resp) {
+        Robot.refreshData(resp);
+    }).fail(function(resp) {
         Robot.showMessage("Scene could not be run");
         $(".scene-pending").removeClass('scene-pending');
-      }
     }).always(function(){
-        Robot.dash();
+        Robot.refreshDash();
     });
 }
 
 Robot.setDevice = function(id,type,value) {
 
     var devName = 'device'+room.devices[id].device_id;
+    var pending = false;
     Robot.devices[devName].setPending();
 
     $.ajax({
@@ -217,13 +216,16 @@ Robot.setDevice = function(id,type,value) {
       data: {"id":id,"type":type,"value":value}
     }).done(function(resp,stat,xhr) {
         if(xhr.status == 202) {
-            // Robot.showMessage("Request for value change to "+value+" is pending");
+            pending = true;
         }
         Robot.refreshData(resp);
     }).fail(function() {
         Robot.showMessage("Device could not be set");
     }).always(function(){
         Robot.refreshRoom();
+        if(pending) {
+            Robot.devices[devName].showPendingMessge();
+        }
     });
 
 }
