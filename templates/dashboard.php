@@ -14,7 +14,6 @@
 <script>
     Robot.shortcuts = <?php echo json_encode($shortcuts) ?>;
     Robot.rooms = <?php echo json_encode($rooms) ?>;
-    Robot.scenes = '<?php echo json_encode($scenes) ?>';
     Robot.route();
 </script>
 <?php $this->stop() ?>

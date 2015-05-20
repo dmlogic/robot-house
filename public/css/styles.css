@@ -34,3 +34,14 @@
     font-size:30px;
     font-weight:bold;
 }
+
+.scene-pending {
+    background-image: url(../images/ajax-loader.gif);
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    padding-left:25px;
+}
+
+.scene-pending .glyphicon {
+    display:none;
+}

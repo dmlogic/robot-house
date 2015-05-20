@@ -26,6 +26,7 @@ Shortcut.prototype.render = function(appendTo) {
     appendTo.append(str);
 }
 
+
 Shortcut.prototype.setValues = function(values) {
     this.id = values.id;
     this.type = values.type;

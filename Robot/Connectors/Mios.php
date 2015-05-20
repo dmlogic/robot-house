@@ -143,6 +143,12 @@ class Mios implements Connector {
     }
 
     public function runScene($number) {
-
+        try {
+            $resp =  $this->client->get('data_request?id=lu_action&serviceId=urn:micasaverde-com:serviceId:HomeAutomationGateway1&output_format=json&action=RunScene&SceneNum='.(int) $number);
+            $raw = $resp->json();
+            return true;
+        } catch(\Exception $e) {
+            return false;
+        }
     }
 }

@@ -58,6 +58,14 @@ class House {
         $this->scenes    = new Collection;
     }
 
+    public function dashData()
+    {
+        return [
+            'rooms'     => $this->getStructure(),
+            'shortcuts' => $this->getShortcuts(),
+        ];
+    }
+
     /**
      * Get the structure of the house as rooms and contained devices
      *

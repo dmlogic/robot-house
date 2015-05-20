@@ -1,5 +1,13 @@
 var Robot = function() { }
 
+Robot.dashRendered = false;
+Robot.devices = {};
+Robot.shorcutsRendered = {};
+
+
+/**
+ * Routing between room and dashboard
+ */
 Robot.route = function() {
     if(location.hash) {
         Robot.room();
@@ -9,9 +17,9 @@ Robot.route = function() {
     }
 }
 
-Robot.dashRendered = false;
-Robot.devices = {};
-
+/**
+ * Display of a room
+ */
 Robot.room = function() {
 
     $("#dash").addClass("hidden");
@@ -76,6 +84,13 @@ Robot.room = function() {
     drawRoom(room);
 }
 
+Robot.showMessage = function(msg) {
+    alert(msg);
+}
+
+/**
+ * Display of dash
+ */
 Robot.dash = function() {
 
     $("#room").addClass("hidden");
@@ -87,28 +102,27 @@ Robot.dash = function() {
 
     this.dashRendered = true;
 
-    var scWrap = $("#dash-shortcuts");
+    function createShortcut(s,wrapper) {
+        sName = 'shortcut'+s.id;
+        Robot.shorcutsRendered[sName] = new Shortcut(s);
+        Robot.shorcutsRendered[sName].render(wrapper);
+    }
 
-    $.each(Robot.shortcuts.shortcut,function(i,s){
-        sc = new Shortcut(s);
-        sc.render(scWrap);
-    })
+    var scWrap = $("#dash-shortcuts");
+    $.each(Robot.shortcuts.shortcut,function(i,s){ createShortcut(s,scWrap) })
+
     var rWrap = $("#dash-rooms");
-    $.each(Robot.shortcuts.room,function(i,s){
-        sc = new Shortcut(s);
-        sc.render(rWrap);
-    })
-    var rWrap = $("#dash-heating");
-    $.each(Robot.shortcuts.heating,function(i,s){
-        sc = new Shortcut(s);
-        sc.render(rWrap);
-    })
+    $.each(Robot.shortcuts.room,function(i,s){ createShortcut(s,rWrap) })
+
+    var hWrap = $("#dash-heating");
+    $.each(Robot.shortcuts.heating,function(i,s){ createShortcut(s,hWrap) })
 
     function renderHeatingStatus() {
         str = '<hr><div class="row">';
         $.each(Robot.rooms.services.devices,function(i,s){
             cls = (s.state == 'Off') ? 'info' : 'danger';
-            str += '<div class="col-xs-6"><p>'+s.name+': <span class="label label-'+cls+'">'+s.state+'</label></p></div>';
+            lbl = (s.state == 'Off') ? 'Off' : 'On';
+            str += '<div class="col-xs-6"><p>'+s.name+': <span class="label label-'+cls+'">'+lbl+'</label></p></div>';
         })
 
         str += '</div>';
@@ -147,16 +161,46 @@ Robot.dash = function() {
     renderHeatingStatus();
 }
 
+Robot.refreshDashWith = function(data) {
+    Robot.rooms = data.rooms;
+    Robot.shortcuts = data.shortcuts;
+    Robot.dashRendered = false;
+
+    $("#dash-shortcuts, #dash-rooms, #dash-heating, #battery-wrap").html("");
+    Robot.dash();
+}
+
+Robot.runScene = function(el) {
+
+    var sc = Robot.shorcutsRendered[el.attr("id")];
+
+    function setPending(el) {
+        if(el.hasClass('btn-success')) {
+            return;
+        }
+        el.addClass("scene-pending");
+    }
+
+    setPending(el);
+
+    $.ajax({
+      type: "POST",
+      url: '/run-scene',
+      data: 'scene='+el.data('scene'),
+      success: function(resp) {
+        Robot.refreshDashWith(resp);
+      },
+      error:function(resp) {
+        Robot.showMessage("Scene could not be run");
+        $(".scene-pending").removeClass('scene-pending');
+      }
+    });
+}
+/**
+ * Event listeners
+ */
 window.onhashchange = Robot.route;
 document.getElementById("back").addEventListener("click",function(){ location.hash = ''; });
-
-/*
-var myDimmer = new Dimmer(1,50);
-    myDimmer.render($(".container"));
-    $("#button").on("click",function(){
-        // console.log(myDimmer);
-        myDimmer.setState(45);
-    })
-    myDimmer.setState("changed");
-    console.log(myDimmer.state);
-    */
+$(document).on("click","[data-scene]",function(){
+    Robot.runScene($(this));
+})

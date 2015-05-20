@@ -15,27 +15,33 @@ $view      = new League\Plates\Engine(BASE_DIR.'templates');
  */
 $app->get('/', function($request,$response) use($view, $house) {
 
-    $data = [
-        'message'   => null,
-        'rooms'     => $house->getStructure(),
-        'scenes'    => $house->getScenes(),
-        'shortcuts' => $house->getShortcuts(),
-    ];
+    $data = $house->dashData();
+    $data['message'] = null;
+
     return $response->write( $view->render('dashboard',$data) );
 })->add(new Robot\Auth);
 
-/**
- * Room display
- */
-$app->get('/room/{name}', function ($request, $response, $args) use ($view) {
-    $data = [
-        'message' => null,
-        'title'   => 'Lounge',
-        'lights'  => [],
-        'climate' => []
-    ];
-    return $response->write( $view->render('room',$data) );
+$app->get('/refresh', function($request,$response) use($house) {
+    return $response->write( json_encode( $house->dashData() ) )->withHeader('Content-type','application/json');
+
+})->add(new Robot\Auth);
+
+$app->get('/debug', function($request,$response) use($connector) {
 });
+
+/**
+ * Run a Scene
+ */
+$app->post('/run-scene', function($request,$response) use($connector, $house) {
+    if(!$connector->runScene($request->getParam('scene'))) {
+        return $response->withStatus(400);
+    }
+
+    return $response->write( json_encode( $house->dashData() ) )->withHeader('Content-type','application/json');
+
+})->add(new Robot\Auth);
+
+
 /**
  * Login form
  */
