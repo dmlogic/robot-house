@@ -37,6 +37,7 @@ $app->get('/refresh', function($request,$response) use($house) {
 $app->get('/clear-cache', function($request,$response) {
     Robot\Session::delete('robot-mios-server');
     Robot\Session::delete('robot-house');
+    return $response->write('ok');
 })->add(new Robot\Auth);
 
 /**
