@@ -12,8 +12,9 @@ $house     = new Robot\House($connector);
 $app       = new Slim\App;
 $view      = new League\Plates\Engine(BASE_DIR.'templates');
 
-$app->get('/debug', function($request,$response) use($connector) {
-    $connector->generateForwardingURL();
+$app->get('/clear-cache', function($request,$response) {
+    Robot\Session::delete('robot-mios-server');
+    Robot\Session::delete('robot-house');
 });
 
 /**

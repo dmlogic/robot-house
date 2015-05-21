@@ -9,7 +9,9 @@ function getMiosServer($key) {
         return $server;
     }
 
-    $result =  json_decode( file_get_contents('https://sta1.mios.com/locator_json.php?username='.MIOS_UNAME) , true);
+    $client = new GuzzleHttp\Client;
+    $resp =  $client->get('https://sta1.mios.com/locator_json.php?username='.MIOS_UNAME);
+    $result = $resp->json();
 
     if(!is_array($result) || empty($result['units'])) {
         throw new RuntimeException('Could not establish Mios connection');
@@ -25,7 +27,7 @@ function getMiosServer($key) {
         throw new RuntimeException('Could not establish Mios server');
     }
 
-    $server = sprintf('https://%s.mios.com/%s/%s/%d/',$host,MIOS_UNAME,MIOS_PWD,MIOS_VERAID);
+    $server = sprintf('https://%s/%s/%s/%d/',$host,MIOS_UNAME,MIOS_PWD,MIOS_VERAID);
     Robot\Session::set($key,$server,86400);
     unset($client);
 

@@ -21,6 +21,7 @@
     Robot.shortcuts = <?php echo json_encode($shortcuts) ?>;
     Robot.rooms = <?php echo json_encode($rooms) ?>;
     Robot.route();
+    setTimeout(Robot.refresh,500)
 </script>
 <?php $this->stop() ?>
 
