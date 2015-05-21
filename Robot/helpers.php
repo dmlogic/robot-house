@@ -9,9 +9,7 @@ function getMiosServer($key) {
         return $server;
     }
 
-    $client = new GuzzleHttp\Client;
-    $resp =  $client->get('https://sta1.mios.com/locator_json.php?username='.MIOS_UNAME);
-    $result = $resp->json();
+    $result =  json_decode( file_get_contents('https://sta1.mios.com/locator_json.php?username='.MIOS_UNAME) , true);
 
     if(!is_array($result) || empty($result['units'])) {
         throw new RuntimeException('Could not establish Mios connection');
