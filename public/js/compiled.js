@@ -252,10 +252,11 @@ Robot.reloading = null;
 Robot.route = function() {
     if(location.hash) {
         Robot.room();
-        return;
     } else {
         Robot.dash();
     }
+
+    window.scrollTo(0,0);
 };
 
 /**
