@@ -44,7 +44,7 @@ class Session implements ServiceProviderInterface {
         return static::instance()->memcached->get($key);
     }
 
-    public function delete($key)
+    public static function delete($key)
     {
         static::instance()->memcached->delete($key);
     }
