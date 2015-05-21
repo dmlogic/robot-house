@@ -4,6 +4,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="/js/bootstrap-slider.min.js"></script>
+<?php if(ENVIRONMENT === 'local') :?>
 <script src="/js/components/device.js"></script>
 <script src="/js/components/dimmer.js"></script>
 <script src="/js/components/relay.js"></script>
@@ -12,14 +13,16 @@
 <script src="/js/components/shortcut.js"></script>
 <script src="/js/components/app.js"></script>
 <script src="/js/components/listeners.js"></script>
+<script src="/js/components/idle.js"></script>
+<?php else : ?>
+<script src="/js/compiled.min.js?v=<?php echo ASSETS_VERSION ?>"></script>
+<?php endif; ?>
 <script>
     Robot.shortcuts = <?php echo json_encode($shortcuts) ?>;
     Robot.rooms = <?php echo json_encode($rooms) ?>;
     Robot.route();
 </script>
 <?php $this->stop() ?>
-
-<div class="alert alert-success hidden"><?=$this->e($message)?></div>
 
 <div id="dash">
 

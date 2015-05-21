@@ -1,5 +1,7 @@
 <?php
 define('BASE_DIR',__DIR__.'/');
+define('ASSETS_VERSION','d5e0483');
+
 require BASE_DIR.'environment.php';
 require BASE_DIR.'vendor/autoload.php';
 require BASE_DIR.'Robot/helpers.php';
@@ -10,22 +12,19 @@ $house     = new Robot\House($connector);
 $app       = new Slim\App;
 $view      = new League\Plates\Engine(BASE_DIR.'templates');
 
-$app->get('/debug', function($request,$response) use($connector) {
-});
-
 /**
  * Dashboard route
  */
 $app->get('/', function($request,$response) use($view, $house) {
 
     $data = $house->dashData();
-    $data['message'] = null;
-
     return $response->write( $view->render('dashboard',$data) );
+
 })->add(new Robot\Auth);
 
 $app->get('/refresh', function($request,$response) use($house) {
-    return $response->write( json_encode( $house->dashData() ) )->withHeader('Content-type','application/json');
+
+    return $response->write( json_encode( $house->dashData(false) ) )->withHeader('Content-type','application/json');
 
 })->add(new Robot\Auth);
 
@@ -38,10 +37,7 @@ $app->post('/set-device', function($request,$response) use($connector, $house) {
     if($result === false) {
         return $response->withStatus(400);
     }
-    if($result == 'pending') {
-        $response = $response->withStatus(202);
-    }
-    return $response->write( json_encode( $house->dashData() ) )->withHeader('Content-type','application/json');
+    return $response->write( 'ok' );
 
 })->add(new Robot\Auth);
 /**
@@ -52,7 +48,7 @@ $app->post('/run-scene', function($request,$response) use($connector, $house) {
         return $response->withStatus(400);
     }
 
-    return $response->write( json_encode( $house->dashData() ) )->withHeader('Content-type','application/json');
+    return $response->write( json_encode( $house->dashData(false) ) )->withHeader('Content-type','application/json');
 
 })->add(new Robot\Auth);
 

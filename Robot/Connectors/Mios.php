@@ -182,6 +182,13 @@ class Mios implements Connector {
             return false;
         }
 
+        return true;
+
+        // We're not going to the below.
+        // It comes back pending so often that we may as well respond quickly
+        // and then do a refresh from the front end. By the time that's happened
+        // the pending state has gone
+
         // Vera needs a little time to digest this
         sleep(1);
 

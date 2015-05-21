@@ -1,6 +1,6 @@
-function Battery(values) {
-    Device.call(this,values)
-}
+var Battery = function(values) {
+    Device.call(this,values);
+};
 
 Battery.prototype = Object.create(Device.prototype);
 Battery.prototype.constructor = Battery;
@@ -8,13 +8,13 @@ Battery.prototype.constructor = Battery;
 Battery.prototype.render = function(appendTo) {
     str = '<p>'+this.desc+'</p>'+this.markup();
     appendTo.append(str);
-}
+};
 
 Battery.prototype.markup = function() {
     return '<div class="progress">'+
             '<div class="progress-bar progress-bar-striped progress-bar-'+this.bar_class+'" style="width: '+this.level+'%;">'+this.level+'%</div>'+
         '</div>';
-}
+};
 
 Battery.prototype.setValues = function(values) {
     this.desc = values[1];
@@ -28,4 +28,4 @@ Battery.prototype.setValues = function(values) {
     } else {
         this.bar_class =  'success';
     }
-}
+};

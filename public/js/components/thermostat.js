@@ -1,6 +1,6 @@
-function Thermostat(values) {
-    Device.call(this,values)
-}
+var Thermostat = function(values) {
+    Device.call(this,values);
+};
 
 Thermostat.prototype = Object.create(Device.prototype);
 Thermostat.prototype.constructor = Thermostat;
@@ -39,13 +39,13 @@ Thermostat.prototype.render = function(appendTo) {
     this.sliderObject.on("slideStop",function(res){
         Robot.setDevice(resId,'stat',res.value);
     });
-}
+};
 
 Thermostat.prototype.setPending = function(values) {
     $('[data-stat="'+this.id+'"]').attr("disabled","disabled");
     this.sliderObject.slider("disable");
     $('#device-wrap'+this.id).addClass("pending");
-}
+};
 
 Thermostat.prototype.setValues = function(values) {
     this.id = values.device_id;
@@ -54,11 +54,11 @@ Thermostat.prototype.setValues = function(values) {
     this.current = values.current;
     this.type = values.type;
     this.battery = values.battery_level;
-}
+};
 
 Thermostat.prototype.currentTemp = function(value) {
     if(this.type == 'rad') {
         return '';
     }
     return '<div class="col-xs-4"><p class="temperature text-center">'+this.current+'&deg;</p></div>';
-}
+};

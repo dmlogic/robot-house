@@ -58,12 +58,18 @@ class House {
         $this->scenes    = new Collection;
     }
 
-    public function dashData()
+    public function dashData($fromCache = true)
     {
-        return [
+        if($fromCache && $data = Session::get('robot-house')) {
+            return $data;
+        }
+
+        $data = [
             'rooms'     => $this->getStructure(),
             'shortcuts' => $this->getShortcuts(),
         ];
+        Session::set('robot-house',$data);
+        return $data;
     }
 
     /**
@@ -71,7 +77,7 @@ class House {
      *
      * @return Robot\Collection
      */
-    public function getStructure()
+    private function getStructure()
     {
         $this->lookupRoomsAndDevices();
         $this->setDeviceStates();
@@ -89,7 +95,7 @@ class House {
      *
      * @return Robot\Collection
      */
-    public function getScenes()
+    private function getScenes()
     {
         $this->lookupScenes();
         $this->setSceneStates();
@@ -97,7 +103,7 @@ class House {
         return $this->scenes;
     }
 
-    public function getShortcuts()
+    private function getShortcuts()
     {
         $this->getScenes();
 
@@ -173,7 +179,7 @@ class House {
     }
 
     /**
-     * Get all our rooms and devices from storage
+     * Get all our rooms and devices
      *
      * @return void
      */

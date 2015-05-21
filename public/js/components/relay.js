@@ -1,6 +1,6 @@
-function Relay(values) {
-    Device.call(this,values)
-}
+var Relay = function(values) {
+    Device.call(this,values);
+};
 
 Relay.prototype = Object.create(Device.prototype);
 Relay.prototype.constructor = Relay;
@@ -13,14 +13,14 @@ Relay.prototype.render = function(appendTo) {
             '<button class="btn btn-'+onClass+'" data-relay="1" data-type="'+this.type+'" data-device-id="'+this.id+'">On</button>'+
             '<button class="btn btn-'+offClass+'" data-relay="0" data-type="'+this.type+'" data-device-id="'+this.id+'">Off</button>'+
             '</p>'+
-        '</div>'
+        '</div>';
     appendTo.append(str);
-}
+};
 
 Relay.prototype.setPending = function(values) {
     $('[data-device-id="'+this.id+'"]').attr("disabled","disabled");
     $('#device-wrap'+this.id).addClass("pending");
-}
+};
 
 Relay.prototype.setValues = function(values) {
     this.id = values.device_id;
@@ -31,4 +31,4 @@ Relay.prototype.setValues = function(values) {
     } else {
         this.status = (values.state > 0) ? 'on' : 'off';
     }
-}
+};

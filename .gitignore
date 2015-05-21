@@ -1,4 +1,5 @@
 vendor
 environment.php
 database
+node_modules/*
 *.csv

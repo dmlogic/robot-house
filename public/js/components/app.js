@@ -1,9 +1,8 @@
-var Robot = function() { }
+var Robot = function() { };
 
-Robot.dashRendered = false;
 Robot.devices = {};
 Robot.shorcutsRendered = {};
-
+Robot.reloading = null;
 
 /**
  * Routing between room and dashboard
@@ -15,7 +14,7 @@ Robot.route = function() {
     } else {
         Robot.dash();
     }
-}
+};
 
 /**
  * Display of a room
@@ -82,11 +81,11 @@ Robot.room = function() {
         return;
     }
     drawRoom(room);
-}
+};
 
 Robot.showMessage = function(msg) {
     alert(msg);
-}
+};
 
 /**
  * Display of dash
@@ -96,11 +95,11 @@ Robot.dash = function() {
     $("#room").addClass("hidden");
     $("#dash").removeClass("hidden");
 
-    if(this.dashRendered) {
-        return;
-    }
-
-    this.dashRendered = true;
+    var scWrap         = $("#dash-shortcuts");
+    var rWrap          = $("#dash-rooms");
+    var hWrap          = $("#dash-heating");
+    var bWrap          = $("#battery-wrap");
+    var batteryDevices = [];
 
     function createShortcut(s,wrapper) {
         sName = 'shortcut'+s.id;
@@ -108,14 +107,18 @@ Robot.dash = function() {
         Robot.shorcutsRendered[sName].render(wrapper);
     }
 
-    var scWrap = $("#dash-shortcuts");
-    $.each(Robot.shortcuts.shortcut,function(i,s){ createShortcut(s,scWrap) })
+    function clearDash() {
+        scWrap.html("");
+        rWrap.html("");
+        hWrap.html("");
+        bWrap.html("");
+    }
 
-    var rWrap = $("#dash-rooms");
-    $.each(Robot.shortcuts.room,function(i,s){ createShortcut(s,rWrap) })
-
-    var hWrap = $("#dash-heating");
-    $.each(Robot.shortcuts.heating,function(i,s){ createShortcut(s,hWrap) })
+    function drawShortcuts() {
+        $.each(Robot.shortcuts.shortcut,function(i,s){ createShortcut(s,scWrap); });
+        $.each(Robot.shortcuts.room,function(i,s){ createShortcut(s,rWrap); });
+        $.each(Robot.shortcuts.heating,function(i,s){ createShortcut(s,hWrap); });
+    }
 
     function renderHeatingStatus() {
         str = '<hr><div class="row">';
@@ -123,16 +126,13 @@ Robot.dash = function() {
             cls = (s.state == 'Off') ? 'info' : 'danger';
             lbl = (s.state == 'Off') ? 'Off' : 'On';
             str += '<div class="col-xs-6"><p>'+s.name+': <span class="label label-'+cls+'">'+lbl+'</label></p></div>';
-        })
+        });
 
         str += '</div>';
         hWrap.append(str);
     }
 
-    var batteryDevices = [];
-
     function renderBatteries() {
-        var bWrap = $("#battery-wrap");
         var collected = [];
         $.each(Robot.rooms,function(i,room) {
             var roomName = room.name;
@@ -142,11 +142,11 @@ Robot.dash = function() {
                     collected.push([room.devices[devId].battery_level,roomName+': '+room.devices[devId].name]);
                 }
             }
-        })
+        });
         if(!collected.length) {
             return false;
         }
-        collected.sort(function(a, b) {return a[0] - b[0]});
+        collected.sort(function(a, b) {return a[0] - b[0];});
         for(i = 0 ; i < collected.length ; i++) {
             b = new Battery(collected[i]);
             b.render(bWrap);
@@ -154,28 +154,18 @@ Robot.dash = function() {
         return true;
     }
 
+    clearDash();
+    drawShortcuts();
     if(renderBatteries()) {
         $("#battery-panel").removeClass("hidden");
     }
-
     renderHeatingStatus();
-}
-
-Robot.refreshDash = function(data) {
-    $("#dash-shortcuts, #dash-rooms, #dash-heating, #battery-wrap").html("");
-    Robot.dash();
-}
+};
 
 Robot.refreshData = function(data) {
     Robot.rooms = data.rooms;
     Robot.shortcuts = data.shortcuts;
-    Robot.dashRendered = false;
-}
-
-Robot.refreshRoom = function(data) {
-    $("#dash-shortcuts, #dash-rooms, #dash-heating, #battery-wrap, #lights-devices, #climate-devices").html("");
-    Robot.room();
-}
+};
 
 Robot.runScene = function(el) {
 
@@ -200,9 +190,9 @@ Robot.runScene = function(el) {
         Robot.showMessage("Scene could not be run");
         $(".scene-pending").removeClass('scene-pending');
     }).always(function(){
-        Robot.refreshDash();
+        Robot.route();
     });
-}
+};
 
 Robot.setDevice = function(id,type,value) {
 
@@ -215,17 +205,26 @@ Robot.setDevice = function(id,type,value) {
       url: '/set-device',
       data: {"id":id,"type":type,"value":value}
     }).done(function(resp,stat,xhr) {
-        if(xhr.status == 202) {
-            pending = true;
-        }
-        Robot.refreshData(resp);
+        setTimeout(Robot.reload, 1000);
     }).fail(function() {
         Robot.showMessage("Device could not be set");
     }).always(function(){
-        Robot.refreshRoom();
-        if(pending) {
-            Robot.devices[devName].showPendingMessge();
-        }
+        Robot.route();
+        Robot.devices[devName].showPendingMessge();
     });
+};
 
-}
+Robot.reload = function(){
+
+    if(Robot.reloading) {
+        return;
+    }
+    Robot.reloading = $.ajax({
+                          type: "GET",
+                          url: '/refresh'
+                        }).done(function(resp) {
+                            Robot.reloading = null;
+                            Robot.refreshData(resp);
+                            Robot.route();
+                        });
+};
