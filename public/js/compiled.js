@@ -25,7 +25,7 @@ Device.prototype.showPendingMessge = function(values) {
         $(".alert").fadeOut( "slow", function() {
             $(this).remove();
         });
-    },1000);
+    },2000);
 };
 var Dimmer = function(values) {
     Device.call(this,values);
@@ -459,8 +459,9 @@ Robot.setDevice = function(id,type,value) {
 Robot.reload = function(){
 
     if(Robot.reloading) {
-        return;
+        Robot.reloading.abort();
     }
+
     Robot.reloading = $.ajax({
                           type: "GET",
                           url: '/refresh'
@@ -469,11 +470,23 @@ Robot.reload = function(){
                             Robot.refreshData(resp);
                             Robot.route();
                         });
+
+    return Robot.reloading;
+};
+
+Robot.refresh = function(){
+    $('.data-refresh').addClass("pending").attr("disabled","disabled");
+    Robot.reload().always(function(){
+        $('.data-refresh').removeClass("pending").removeAttr("disabled");
+    });
 };
 window.onhashchange = Robot.route;
 
 // Back to Dash
 document.getElementById("back").addEventListener("click",function(){ location.hash = ''; });
+
+// Refresh
+document.getElementById("refresh").addEventListener("click",Robot.refresh);
 
 // Click scene
 $(document).on("click","[data-scene]",function(){

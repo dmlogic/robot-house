@@ -276,10 +276,22 @@
 .well {
     position: relative;
 }
+
 .device-wrap .alert {
     position: absolute;
     top:4px;
     right:4px;
     margin:0 ;
     padding:4px 25px 4px 15px;
+}
+
+.pending .glyphicon-refresh:before {
+    content:"";
+}
+
+.pending .glyphicon-refresh {
+    background-image: url(/images/ajax-loader.gif);
+    background-repeat: no-repeat;
+    width:16px;
+    height:16px;
 }

@@ -3,6 +3,9 @@ window.onhashchange = Robot.route;
 // Back to Dash
 document.getElementById("back").addEventListener("click",function(){ location.hash = ''; });
 
+// Refresh
+document.getElementById("refresh").addEventListener("click",Robot.refresh);
+
 // Click scene
 $(document).on("click","[data-scene]",function(){
     Robot.runScene($(this));

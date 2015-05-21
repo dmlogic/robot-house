@@ -26,6 +26,8 @@
 
 <div id="dash">
 
+    <p class="pull-right data-refresh"><button class="btn btn-default" type="button" id="refresh">Refresh now <span class="glyphicon glyphicon-refresh"></span></button></p>
+
     <h1>Dashboard</h1>
 
     <div class="panel panel-primary">

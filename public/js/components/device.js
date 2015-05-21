@@ -25,5 +25,5 @@ Device.prototype.showPendingMessge = function(values) {
         $(".alert").fadeOut( "slow", function() {
             $(this).remove();
         });
-    },1000);
+    },2000);
 };

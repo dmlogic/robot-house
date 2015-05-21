@@ -1,6 +1,6 @@
 <?php
 define('BASE_DIR',__DIR__.'/');
-define('ASSETS_VERSION','d5e0483');
+define('ASSETS_VERSION','06f1e81');
 
 require BASE_DIR.'environment.php';
 require BASE_DIR.'vendor/autoload.php';

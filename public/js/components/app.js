@@ -217,8 +217,9 @@ Robot.setDevice = function(id,type,value) {
 Robot.reload = function(){
 
     if(Robot.reloading) {
-        return;
+        Robot.reloading.abort();
     }
+
     Robot.reloading = $.ajax({
                           type: "GET",
                           url: '/refresh'
@@ -227,4 +228,13 @@ Robot.reload = function(){
                             Robot.refreshData(resp);
                             Robot.route();
                         });
+
+    return Robot.reloading;
+};
+
+Robot.refresh = function(){
+    $('.data-refresh').addClass("pending").attr("disabled","disabled");
+    Robot.reload().always(function(){
+        $('.data-refresh').removeClass("pending").removeAttr("disabled");
+    });
 };

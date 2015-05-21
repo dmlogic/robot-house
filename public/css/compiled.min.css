@@ -34,12 +34,15 @@
 .panel-heading{font-size:18px}
 .btn-shortcut{display:inline-block;margin:5px}
 .well{background:#E0E0E0;position:relative}
+.device-wrap.pending h3,.pending .glyphicon-refresh,.scene-pending{background-image:url(/images/ajax-loader.gif);background-repeat:no-repeat}
 .go-back{margin-top:15px}
 .device-title{margin-top:0;margin-bottom:30px;font-size:20px}
 .temp-wrap{margin-bottom:10px}
 .currently{font-size:18px;margin-bottom:15px}
 .temperature{font-size:30px;font-weight:700}
-.device-wrap.pending h3,.scene-pending{background-image:url(/images/ajax-loader.gif);background-repeat:no-repeat;background-position:5px center;padding-left:25px}
+.device-wrap.pending h3,.scene-pending{background-position:5px center;padding-left:25px}
 .scene-pending .glyphicon{display:none}
 .device-wrap.pending h3{background-position:right center;padding-left:0}
 .device-wrap .alert{position:absolute;top:4px;right:4px;margin:0;padding:4px 25px 4px 15px}
+.pending .glyphicon-refresh:before{content:""}
+.pending .glyphicon-refresh{width:16px;height:16px}
