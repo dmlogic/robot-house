@@ -7,7 +7,8 @@ document.getElementById("back").addEventListener("click",function(){ location.ha
 document.getElementById("refresh").addEventListener("click",Robot.refresh);
 
 // Click scene
-$(document).on("click","[data-scene]",function(){
+$(document).on("click","[data-scene]",function(ev){
+    ev.preventDefault();
     Robot.runScene($(this));
 });
 
