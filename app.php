@@ -7,10 +7,14 @@ require BASE_DIR.'vendor/autoload.php';
 require BASE_DIR.'Robot/helpers.php';
 
 # Services
-$connector = new Robot\Connectors\Mios( new GuzzleHttp\Client(['base_url' => MIOS_URL]) );
+$connector = new Robot\Connectors\Mios( new GuzzleHttp\Client(['base_url' => getMiosServer('robot-mios-server')]) );
 $house     = new Robot\House($connector);
 $app       = new Slim\App;
 $view      = new League\Plates\Engine(BASE_DIR.'templates');
+
+$app->get('/debug', function($request,$response) use($connector) {
+    $connector->generateForwardingURL();
+});
 
 /**
  * Dashboard route

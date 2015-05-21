@@ -1,6 +1,6 @@
 <?php
 /**
- * All this does is refresh the house cache
+ * All this does is refresh the cache
  */
 define('BASE_DIR',__DIR__.'/');
 
@@ -13,3 +13,4 @@ $house     = new Robot\House($connector);
 
 Robot\Session::delete('robot-house');
 $house->dashData(false);
+getMiosServer('robot-mios-server');

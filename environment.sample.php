@@ -9,4 +9,6 @@ define('AUTH_PWD','set'); // md5('your-password-that-isnt-saved-anywhere'.AUTH_S
 define('MEMCACHED_HOST', '127.0.0.1');
 define('MEMCACHED_PORT', '11211');
 
-define('MIOS_URL','https://[server].mios.com/[username]/[password]/[vera-id]/');
+define('MIOS_UNAME','set');
+define('MIOS_PWD','set');
+define('MIOS_VERAID','set');
