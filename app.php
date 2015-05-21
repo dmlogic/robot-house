@@ -12,11 +12,6 @@ $house     = new Robot\House($connector);
 $app       = new Slim\App;
 $view      = new League\Plates\Engine(BASE_DIR.'templates');
 
-$app->get('/clear-cache', function($request,$response) {
-    Robot\Session::delete('robot-mios-server');
-    Robot\Session::delete('robot-house');
-});
-
 /**
  * Dashboard route
  */
@@ -27,10 +22,21 @@ $app->get('/', function($request,$response) use($view, $house) {
 
 })->add(new Robot\Auth);
 
+/**
+ * Refresh data (forces cache reload)
+ */
 $app->get('/refresh', function($request,$response) use($house) {
 
     return $response->write( json_encode( $house->dashData(false) ) )->withHeader('Content-type','application/json');
 
+})->add(new Robot\Auth);
+
+/**
+ * Manually clear caches in emergency
+ */
+$app->get('/clear-cache', function($request,$response) {
+    Robot\Session::delete('robot-mios-server');
+    Robot\Session::delete('robot-house');
 })->add(new Robot\Auth);
 
 /**
