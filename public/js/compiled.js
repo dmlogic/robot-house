@@ -43,8 +43,8 @@ Dimmer.prototype.render = function(appendTo) {
             '<input id="device'+this.id+'" name="device'+this.id+'" data-slider-id="device'+this.id+'" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="5" data-slider-value="'+this.level+'"/>'+
             '</p>'+
             '<p>'+
-            '<button class="btn btn-'+onClass+'" data-light="on" data-device-id="'+this.id+'">On</button>'+
-            '<button class="btn btn-'+offClass+'" data-light="off" data-device-id="'+this.id+'">Off</button>'+
+            '<button class="btn btn-'+onClass+'" data-relay="1" data-type="light" data-device-id="'+this.id+'">On</button>'+
+            '<button class="btn btn-'+offClass+'" data-relay="0" data-type="light" data-device-id="'+this.id+'">Off</button>'+
             '</p>'+
         '</div>';
     appendTo.append(str);
