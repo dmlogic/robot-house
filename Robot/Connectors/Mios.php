@@ -183,40 +183,6 @@ class Mios implements Connector {
         }
 
         return true;
-
-        // We're not going to the below.
-        // It comes back pending so often that we may as well respond quickly
-        // and then do a refresh from the front end. By the time that's happened
-        // the pending state has gone
-
-        // Vera needs a little time to digest this
-        sleep(1);
-
-        // Now we need another to call to see what happened
-        try {
-            $action = 'data_request?id=jobstatus&output_format=json&plugin=zwave&&job='.$resp['JobID'];
-            $resp =  $this->client->get($action);
-            $result = $resp->json();
-        } catch(\Exception $e) {
-            return false;
-        }
-
-        switch($result['status']) {
-            // The job failed
-            case 2:
-            case 3:
-            case 6:
-                return false;
-                break;
-            // The job is done
-            case -1:
-            case 4:
-                return true;
-                break;
-            // Anything else means it's pending on wake-up
-            default:
-                return 'pending';
-        }
     }
 
     public function runScene($number) {

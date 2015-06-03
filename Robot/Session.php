@@ -1,9 +1,8 @@
 <?php namespace Robot;
 
 use Memcached;
-use Pimple\ServiceProviderInterface;
 
-class Session implements ServiceProviderInterface {
+class Session {
 
     protected $memcached;
 
@@ -13,11 +12,6 @@ class Session implements ServiceProviderInterface {
     {
         $this->memcached = new Memcached;
         $this->memcached->addServer(MEMCACHED_HOST,MEMCACHED_PORT);
-    }
-
-    public function register(\Pimple\Container $container)
-    {
-        $container['session'] = $this;
     }
 
     protected static function instance()
