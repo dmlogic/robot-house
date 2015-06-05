@@ -3,6 +3,8 @@
 Mobile friendly wrapper app to control hand-picked 
 devices on a Vera Lite
 
+PLEASE NOTE: This is very much a "first attempt" and experimental. There are certainly improvements to be made and probably thing wrong.
+
 Feel free to use. You'll need:
 
 * A Vera Lite (maybe 3) with a Mios account attached to it
