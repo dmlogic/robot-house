@@ -34,7 +34,7 @@
 .panel-heading{font-size:18px}
 .btn-shortcut{display:inline-block;margin:5px}
 .well{background:#E0E0E0;position:relative}
-.device-wrap.pending h3,.pending .glyphicon-refresh,.scene-pending{background-image:url(/images/ajax-loader.gif);background-repeat:no-repeat}
+.device-wrap.pending h3,.pending .glyphicon-refresh,.scene-pending{background-repeat:no-repeat;background-image:url(/images/ajax-loader.gif)}
 .go-back{margin-top:15px}
 .device-title{margin-top:0;margin-bottom:30px;font-size:20px}
 .temp-wrap{margin-bottom:10px}
@@ -46,3 +46,5 @@
 .device-wrap .alert{position:absolute;top:4px;right:4px;margin:0;padding:4px 25px 4px 15px}
 .pending .glyphicon-refresh:before{content:""}
 .pending .glyphicon-refresh{width:16px;height:16px}
+.xmas-light,.xmas-tree{background-position:bottom right;background-image:url(/images/xmas-tree.png);background-repeat:no-repeat}
+.xmas-light{background-image:url(/images/bells.png)}
