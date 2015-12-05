@@ -73,9 +73,15 @@ class SeedData extends AbstractMigration
     {
         $contents = $this->readCsv('devices',true);
         foreach($contents as $row) {
+            $id = $row[0];
+            $room = $row[1];
+            $name = $row[2];
+            $type = $row[3];
             $bat = (int) $row[5];
             $lev = (int) $row[6];
-            $sql = sprintf("INSERT INTO devices(device_id,room,name,type,is_battery,battery_level) VALUES(%d,'%s','%s','%s',%d,%d)",$row[0],$row[1],$row[2],$row[3],$row[4],$bat,$lev);
+            $sql = sprintf("INSERT INTO devices(device_id,room,name,type,is_battery,battery_level,style_class)
+                                        VALUES(%d,'%s','%s','%s',%d,%d,'%s')",
+                                               $id,$room,$name,$type,$bat,$lev,$row[7]);
             $res = $this->execute($sql);
         }
      }

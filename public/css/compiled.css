@@ -295,3 +295,14 @@
     width:16px;
     height:16px;
 }
+
+.xmas-tree,
+.xmas-light {
+    background-position:bottom right;
+    background-image: url(/images/xmas-tree.png);
+    background-repeat: no-repeat;
+}
+
+.xmas-light {
+    background-image: url(/images/bells.png);
+}

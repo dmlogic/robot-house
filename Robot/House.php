@@ -192,6 +192,7 @@ class House {
                 d.state,
                 d.is_battery,
                 d.battery_level,
+                d.style_class,
                 r.name room_name
               FROM devices d
               LEFT JOIN rooms r on d.room = r.slug

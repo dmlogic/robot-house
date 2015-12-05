@@ -24,6 +24,7 @@ class CreateTables extends AbstractMigration
               ->addColumn('state', 'string',['null' => true])
               ->addColumn('is_battery', 'integer',['default' => 0])
               ->addColumn('battery_level', 'integer',['null' => true])
+              ->addColumn('style_class', 'string',['null' => true])
               ->addIndex(['device_id'], ['unique' => true])
               ->create();
 
