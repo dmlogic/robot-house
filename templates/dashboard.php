@@ -37,6 +37,12 @@
         </div>
     </div>
 
+    <div class="panel panel-warning hidden" id="battery-panel">
+        <div class="panel-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> Battery alerts</div>
+        <div class="panel-body" id="battery-wrap">
+        </div>
+    </div>
+
     <div class="panel panel-primary">
         <div class="panel-heading"><span class="glyphicon glyphicon-home"></span> Rooms</div>
         <div class="panel-body" id="dash-rooms">
@@ -49,12 +55,6 @@
             <p>May take up to half an hour to apply</p>
             <div id="dash-heating">
             </div>
-        </div>
-    </div>
-
-    <div class="panel panel-warning hidden" id="battery-panel">
-        <div class="panel-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> Battery alerts</div>
-        <div class="panel-body" id="battery-wrap">
         </div>
     </div>
 </div>
