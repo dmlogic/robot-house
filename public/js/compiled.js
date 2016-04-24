@@ -214,9 +214,7 @@ Temperature.prototype.render = function(appendTo) {
     str =  '<div class="well device-wrap" data-type="stat" id="device-wrap'+this.id+'">'+
                 '<h3 class="device-title">'+this.label+'</h3>'+
                 '<div class="row">'+
-                 this.currentTemp()+
-                '</div>'+
-                '<div class="row">'+
+                    this.currentTemp()+
                     '<div class="col-xs-4">'+
                         '<p>Battery</p>'+
                         bat.markup()+
@@ -241,10 +239,7 @@ Temperature.prototype.setValues = function(values) {
 };
 
 Temperature.prototype.currentTemp = function(value) {
-    if(this.type == 'rad') {
-        return '';
-    }
-    return '<div class="col-xs-4"><p class="temperature text-center">'+this.current+'&deg;</p></div>';
+    return '<div class="col-xs-6 col-xs-offset-2"><p class="temperature">'+this.current+'&deg;</p></div>';
 };
 var Shortcut = function(values) {
     Device.call(this,values);
