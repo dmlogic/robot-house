@@ -10,6 +10,7 @@
 <script src="/js/components/relay.js"></script>
 <script src="/js/components/battery.js"></script>
 <script src="/js/components/thermostat.js"></script>
+<script src="/js/components/temperature.js"></script>
 <script src="/js/components/shortcut.js"></script>
 <script src="/js/components/app.js"></script>
 <script src="/js/components/listeners.js"></script>

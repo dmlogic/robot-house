@@ -57,6 +57,11 @@ Robot.room = function() {
                     Robot.devices[devName].render(cWrap);
                     heating = true;
                     break;
+                case 'temp':
+                    Robot.devices[devName] = new Temperature(room.devices[devId]);
+                    Robot.devices[devName].render(cWrap);
+                    heating = true;
+                    break;
                 case 'hvac':
                     Robot.devices[devName] = new Relay(room.devices[devId]);
                     Robot.devices[devName].render(cWrap);

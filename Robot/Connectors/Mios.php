@@ -104,6 +104,7 @@ class Mios implements Connector {
                     $devices[$key]->wakeup = ceil( $this->findKeyValue('WakeupInterval',$d['states']) / 60 );
                     break;
                 case 'stat':
+                case 'temp':
                     $devices[$key]->current = (int) $this->findKeyValue('CurrentTemperature',$d['states']);
                     $devices[$key]->state = (int) $this->findKeyValue('CurrentSetpoint',$d['states']);
                     $devices[$key]->battery_level = (int) $this->findKeyValue('BatteryLevel',$d['states']);
