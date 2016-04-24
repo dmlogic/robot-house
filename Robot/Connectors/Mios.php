@@ -164,6 +164,9 @@ class Mios implements Connector {
                 $target = ($value) ? 'HeatOn' : 'Off';
                 $action .= '&serviceId=urn:upnp-org:serviceId:HVAC_UserOperatingMode1&action=SetModeTarget&NewModeTarget='.$target ;
                 break;
+            case 'boost':
+                list($setpoint,$duration) = explode('|', $value);
+                $action .= '&serviceId=urn:dmlogic-com:serviceId:HeatingBooster1&action=Boost&Setpoint=' . $setpoint.'&Duration='.$duration;
         }
 
         try {
@@ -179,7 +182,7 @@ class Mios implements Connector {
     private function handleJobResponse($resp)
     {
         $resp = reset($resp);
-        if(!array_key_exists('JobID', $resp)) {
+        if(!array_key_exists('JobID', $resp) && !array_key_exists('OK', $resp)) {
             return false;
         }
 

@@ -50,6 +50,12 @@ class House {
      */
     private $expire;
 
+    /**
+     * The ID of the Boost hander
+     * @var int
+     */
+    private $boosterId;
+
     public function __construct(Connector $connector)
     {
         $this->connector = $connector;
@@ -64,9 +70,12 @@ class House {
             return $data;
         }
 
+
         $data = [
             'rooms'     => $this->getStructure(),
             'shortcuts' => $this->getShortcuts(),
+            'temps'     => $this->getTemperatures(),
+            'booster'   => $this->boosterId,
         ];
         Session::set('robot-house',$data);
         return $data;
@@ -204,7 +213,30 @@ class House {
             if(!array_key_exists($row->room, $this->rooms) ) {
                 $this->rooms[$row->room] = ['name' => $row->room_name, 'devices' => [] ];
             }
+            if($row->type === 'boost') {
+                $this->boosterId = $row->device_id;
+            }
             $this->devices->set($row->device_id, $row);
         }
+    }
+
+    /**
+     * Get the temperature from the main wall stat
+     *
+     * @return array
+     */
+    protected function getTemperatures()
+    {
+        $out = [
+            'target'  => 0,
+            'current' => 0
+        ];
+
+        if($data = $this->devices->get(STAT_ID)) {
+            $out['target'] = $data->state;
+            $out['current'] = $data->current;
+        }
+
+        return $out;
     }
 }

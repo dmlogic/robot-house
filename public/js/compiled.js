@@ -388,6 +388,7 @@ Robot.dash = function() {
     var scWrap         = $("#dash-shortcuts");
     var rWrap          = $("#dash-rooms");
     var hWrap          = $("#dash-heating");
+    var radWrap        = $("#dash-radiators");
     var bWrap          = $("#battery-wrap");
     var batteryDevices = [];
 
@@ -401,16 +402,19 @@ Robot.dash = function() {
         scWrap.html("");
         rWrap.html("");
         hWrap.html("");
+        radWrap.html("");
         bWrap.html("");
     }
 
     function drawShortcuts() {
         $.each(Robot.shortcuts.shortcut,function(i,s){ createShortcut(s,scWrap); });
         $.each(Robot.shortcuts.room,function(i,s){ createShortcut(s,rWrap); });
-        $.each(Robot.shortcuts.heating,function(i,s){ createShortcut(s,hWrap); });
+        $.each(Robot.shortcuts.heating,function(i,s){ createShortcut(s,radWrap); });
     }
 
     function renderHeatingStatus() {
+        $("#temp-current").text(Robot.temps.current);
+        $("#temp-target").text(Robot.temps.target);
         str = '<hr><div class="row">';
         $.each(Robot.rooms.services.devices,function(i,s){
             cls = (s.state == 'Off') ? 'info' : 'danger';
@@ -504,6 +508,24 @@ Robot.setDevice = function(id,type,value) {
     });
 };
 
+Robot.boost = function() {
+
+    console.log("still boosting");
+
+    $("#boost").addClass("scene-pending");
+    data = $('input[name=Setpoint]').val()+'|'+$('select[name=Duration]').val();
+
+    $.ajax({
+      type: "POST",
+      url: '/set-device',
+      data: {"id":Robot.booster,"type":"boost","value":data}
+    }).done(function(resp,stat,xhr) {
+        setTimeout(Robot.reload, 1000);
+    }).always(function(){
+        $("#boost").removeClass("scene-pending");
+    });
+};
+
 Robot.reload = function(){
 
     if(Robot.reloading) {
@@ -550,6 +572,16 @@ $(document).on("click","[data-relay]",function(){
 // Stat change
 $(document).on("change","[data-stat]",function(){
     Robot.setDevice($(this).data('stat'),'stat',$(this).val());
+});
+
+// Boost
+$(document).on("submit","#boost-form",function(ev){
+    ev.preventDefault();
+    console.log("boosting");
+    if(!Robot.booster) {
+        return;
+    }
+    Robot.boost();
 });
 (function() {
     var checkIdle = function(){

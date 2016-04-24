@@ -21,3 +21,13 @@ $(document).on("click","[data-relay]",function(){
 $(document).on("change","[data-stat]",function(){
     Robot.setDevice($(this).data('stat'),'stat',$(this).val());
 });
+
+// Boost
+$(document).on("submit","#boost-form",function(ev){
+    ev.preventDefault();
+    console.log("boosting");
+    if(!Robot.booster) {
+        return;
+    }
+    Robot.boost();
+});
