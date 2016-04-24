@@ -1,10 +1,11 @@
 <?php
 define('BASE_DIR',__DIR__.'/');
 define('ASSETS_VERSION','9489f56');
-
 require BASE_DIR.'environment.php';
 require BASE_DIR.'vendor/autoload.php';
 require BASE_DIR.'Robot/helpers.php';
+
+FileSystemCache::$cacheDir = __DIR__.'/cache';
 
 # Services
 $connector = new Robot\Connectors\Mios( new GuzzleHttp\Client(['base_url' => getMiosServer('robot-mios-server')]) );

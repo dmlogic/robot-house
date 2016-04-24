@@ -5,7 +5,8 @@
         "j20/php-uuid": "dev-master",
         "league/plates": "~3.1",
         "robmorgan/phinx": "^0.4.3",
-        "guzzlehttp/guzzle": "~5.0"
+        "guzzlehttp/guzzle": "~5.0",
+        "jdorn/file-system-cache": "dev-master"
     },
     "autoload": {
         "psr-0": {
