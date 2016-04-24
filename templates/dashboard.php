@@ -97,7 +97,7 @@
 
 
     <div class="panel panel-primary">
-        <div class="panel-heading"><span class="glyphicon glyphicon-asterisk"></span> Raditator profiles</div>
+        <div class="panel-heading"><span class="glyphicon glyphicon-asterisk"></span> Radiator profiles</div>
         <div class="panel-body" id="dash-radiators">
         </div>
     </div>
