@@ -200,6 +200,52 @@ Thermostat.prototype.currentTemp = function(value) {
     }
     return '<div class="col-xs-4"><p class="temperature text-center">'+this.current+'&deg;</p></div>';
 };
+var Temperature = function(values) {
+    Device.call(this,values);
+};
+
+Temperature.prototype = Object.create(Device.prototype);
+Temperature.prototype.constructor = Temperature;
+
+Temperature.prototype.render = function(appendTo) {
+
+    bat = new Battery([this.battery,this.label]);
+
+    str =  '<div class="well device-wrap" data-type="stat" id="device-wrap'+this.id+'">'+
+                '<h3 class="device-title">'+this.label+'</h3>'+
+                '<div class="row">'+
+                 this.currentTemp()+
+                '</div>'+
+                '<div class="row">'+
+                    '<div class="col-xs-4">'+
+                        '<p>Battery</p>'+
+                        bat.markup()+
+                    '</div>'+
+                '</div>'+
+            '</div>';
+
+    if(this.type == 'rad') {
+        appendTo.append(str);
+    } else {
+        appendTo.prepend(str);
+    }
+};
+
+Temperature.prototype.setValues = function(values) {
+    this.id = values.device_id;
+    this.label = values.name;
+    this.level = values.state;
+    this.current = values.current;
+    this.type = values.type;
+    this.battery = values.battery_level;
+};
+
+Temperature.prototype.currentTemp = function(value) {
+    if(this.type == 'rad') {
+        return '';
+    }
+    return '<div class="col-xs-4"><p class="temperature text-center">'+this.current+'&deg;</p></div>';
+};
 var Shortcut = function(values) {
     Device.call(this,values);
 };
@@ -297,6 +343,11 @@ Robot.room = function() {
                 case 'rad':
                 case 'stat':
                     Robot.devices[devName] = new Thermostat(room.devices[devId]);
+                    Robot.devices[devName].render(cWrap);
+                    heating = true;
+                    break;
+                case 'temp':
+                    Robot.devices[devName] = new Temperature(room.devices[devId]);
                     Robot.devices[devName].render(cWrap);
                     heating = true;
                     break;

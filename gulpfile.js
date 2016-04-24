@@ -35,6 +35,7 @@ var myJS = [
     "public/js/components/relay.js",
     "public/js/components/battery.js",
     "public/js/components/thermostat.js",
+    "public/js/components/temperature.js",
     "public/js/components/shortcut.js",
     "public/js/components/app.js",
     "public/js/components/listeners.js",
