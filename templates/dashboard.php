@@ -51,56 +51,6 @@
         <div class="panel-body" id="dash-rooms">
         </div>
     </div>
-
-    <div class="panel panel-primary">
-        <div class="panel-heading"><span class="glyphicon glyphicon-asterisk"></span> Heating</div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-xs-6">
-                    <h4>
-                        Current: <strong class="temperature"><span id="temp-current"></span>&deg;</strong>
-                    </h4>
-                </div>
-                <div class="col-xs-6">
-                    <h4>
-                        Target: <strong class="temperature"><span id="temp-target"></span>&deg;</strong>
-                    </h4>
-                </div>
-            </div>
-            <div id="dash-heating">
-            </div>
-            <hr>
-            <form class="row" id="boost-form">
-                <div class="col-xs-4">
-                    <div class="input-group">
-                        <input type="number" name="Setpoint" class="form-control" id="" min="5" max="25" value="19">
-                        <div class="input-group-addon">&deg;</div>
-                    </div>
-                </div>
-                <div class="col-xs-4">
-                    <select name="Duration" class="form-control">
-                        <option value="1">1 hour</option>
-                        <option value="2">2 hours</option>
-                        <option value="3">3 hours</option>
-                        <option value="4">4 hours</option>
-                    </select>
-                </div>
-                <div class="col-xs-4">
-                    <button class="btn btn-warning" id="boost" type="submit">Boost</button>
-                </div>
-                <div class="col-xs-12">
-                    <p>Boost may take 20 mins to register</p>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-    <div class="panel panel-primary">
-        <div class="panel-heading"><span class="glyphicon glyphicon-asterisk"></span> Radiator profiles</div>
-        <div class="panel-body" id="dash-radiators">
-        </div>
-    </div>
 </div>
 
 <div id="room">

@@ -387,8 +387,6 @@ Robot.dash = function() {
 
     var scWrap         = $("#dash-shortcuts");
     var rWrap          = $("#dash-rooms");
-    var hWrap          = $("#dash-heating");
-    var radWrap        = $("#dash-radiators");
     var bWrap          = $("#battery-wrap");
     var batteryDevices = [];
 
@@ -401,8 +399,6 @@ Robot.dash = function() {
     function clearDash() {
         scWrap.html("");
         rWrap.html("");
-        hWrap.html("");
-        radWrap.html("");
         bWrap.html("");
     }
 
@@ -410,20 +406,6 @@ Robot.dash = function() {
         $.each(Robot.shortcuts.shortcut,function(i,s){ createShortcut(s,scWrap); });
         $.each(Robot.shortcuts.room,function(i,s){ createShortcut(s,rWrap); });
         $.each(Robot.shortcuts.heating,function(i,s){ createShortcut(s,radWrap); });
-    }
-
-    function renderHeatingStatus() {
-        $("#temp-current").text(Robot.temps.current);
-        $("#temp-target").text(Robot.temps.target);
-        str = '<hr><div class="row">';
-        $.each(Robot.rooms.services.devices,function(i,s){
-            cls = (s.state == 'Off') ? 'info' : 'danger';
-            lbl = (s.state == 'Off') ? 'Off' : 'On';
-            str += '<div class="col-xs-6"><p>'+s.name+': <span class="label label-'+cls+'">'+lbl+'</label></p></div>';
-        });
-
-        str += '</div>';
-        hWrap.append(str);
     }
 
     function renderBatteries() {
@@ -453,7 +435,6 @@ Robot.dash = function() {
     if(renderBatteries()) {
         $("#battery-panel").removeClass("hidden");
     }
-    renderHeatingStatus();
 };
 
 Robot.refreshData = function(data) {
@@ -509,8 +490,6 @@ Robot.setDevice = function(id,type,value) {
 };
 
 Robot.boost = function() {
-
-    console.log("still boosting");
 
     $("#boost").addClass("scene-pending");
     data = $('input[name=Setpoint]').val()+'|'+$('select[name=Duration]').val();
